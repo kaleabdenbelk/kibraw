@@ -50,7 +50,7 @@ const isComponentSlug = (slug: string): slug is keyof typeof COMPONENT_DOCS => {
 
 export function App() {
   const { theme, setTheme } = useTheme()
-  const [activeSlug, setActiveSlug] = React.useState<string>("introduction")
+  const [activeSlug, setActiveSlug] = React.useState<string>("getting-started")
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false)
   const [activeTab, setActiveTab] = React.useState<"preview" | "code">("preview")
 
@@ -59,9 +59,11 @@ export function App() {
   const [selectedSearchIndex, setSelectedSearchIndex] = React.useState(0)
 
   const searchItems = [
-    { id: "intro", title: "Introduction", description: "Re-imagining components with universal React Native primitives.", category: "Guides" as const, slug: "introduction" },
-    { id: "install", title: "Installation", description: "How to set up and configure your project for Kibra UI.", category: "Guides" as const, slug: "installation" },
-    { id: "cli", title: "Command Line Interface", description: "Initialize, configure, and add components to your workspace instantly.", category: "Guides" as const, slug: "cli" },
+    { id: "getting-started", title: "Getting Started", description: "Learn how to set up and build your first Expo app with Kibra.", category: "Guides" as const, slug: "getting-started" },
+    { id: "commands", title: "Command Reference", description: "Master the Kibra CLI with this comprehensive guide to every command and flag.", category: "Guides" as const, slug: "commands" },
+    { id: "architecture", title: "Architecture & Philosophy", description: "Why we built Kibra and how it handles your code with transactional safety.", category: "Guides" as const, slug: "architecture" },
+    { id: "troubleshooting", title: "Troubleshooting", description: "Common configuration, styling, and dependency snags and how to fix them.", category: "Guides" as const, slug: "troubleshooting" },
+    { id: "registry-guide", title: "Custom Registries", description: "Learn how to build, package, and host your own custom Kibra registries.", category: "Guides" as const, slug: "registry-guide" },
     { id: "btn", title: "Button Component", description: "Displays a button or a component that looks like a button.", category: "Components" as const, slug: "button" },
     { id: "acc", title: "Accordion Component", description: "A vertically collapsing accordion list with smooth animated transitions.", category: "Components" as const, slug: "accordion" },
     { id: "al", title: "Alert Component", description: "Displays a beautiful alert banner or callout box for notifications.", category: "Components" as const, slug: "alert" },
@@ -124,7 +126,7 @@ export function App() {
         }
       } else {
         // Default route
-        window.location.hash = "#/docs/introduction"
+        window.location.hash = "#/docs/getting-started"
       }
     }
 
@@ -183,7 +185,7 @@ export function App() {
             >
               {mobileMenuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
             </button>
-            <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigateTo("introduction")}>
+            <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigateTo("getting-started")}>
               <div className="flex items-center justify-center size-8 rounded-lg bg-indigo-600 dark:bg-indigo-500 text-white shadow-md shadow-indigo-500/20 font-bold text-base leading-none">
                 K
               </div>
@@ -367,9 +369,11 @@ export function App() {
                   <Button
                     variant="outline"
                     onClick={() => {
-                      if (activeSlug === "introduction") navigateTo("installation")
-                      if (activeSlug === "installation") navigateTo("cli")
-                      if (activeSlug === "cli") navigateTo("button")
+                      if (activeSlug === "getting-started") navigateTo("commands")
+                      if (activeSlug === "commands") navigateTo("architecture")
+                      if (activeSlug === "architecture") navigateTo("troubleshooting")
+                      if (activeSlug === "troubleshooting") navigateTo("registry-guide")
+                      if (activeSlug === "registry-guide") navigateTo("button")
                     }}
                     className="gap-2 group"
                   >

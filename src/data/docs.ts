@@ -24,95 +24,405 @@ export interface GuideDoc {
 }
 
 export const GUIDE_DOCS: Record<string, GuideDoc> = {
-  introduction: {
-    title: "Introduction",
-    description: "Re-imagining components with universal React Native primitives.",
-    slug: "introduction",
-    content: `### Universal Primitives for Web & Native
+  "getting-started": {
+    title: "Getting Started",
+    description: "Learn how to set up and build your first Expo app with Kibra.",
+    slug: "getting-started",
+    content: `# 👋 Getting Started with Kibra
 
-Welcome to **Kibra UI**, a component library crafted with high-fidelity React Native primitives optimized for both the web and native mobile platforms (iOS and Android). 
+Welcome! We're so excited to help you build your next Expo masterpiece. Kibra is designed to be the fastest, most reliable way to ship high-quality UI in React Native.
 
-Instead of traditional web-only div-based architectures, Kibra UI uses native-aliased primitives like \`View\`, \`Text\`, and \`Animated\` blocks. Through **react-native-web** and **react-native-reanimated**, you can run, test, and visually preview native-ready components inside Vite with 60 FPS fluid transitions.
+## 🚀 Quick Start (60 Seconds)
 
-### Why Kibra UI?
-
-1. **Universal Codebase**: Write once, deploy anywhere. The exact same components can be copied into an Expo React Native mobile project or a Vite React web application.
-2. **Beautiful Design**: Styled following premium minimal design guidelines, featuring elegant borders, spacious layout, and fluid dark-mode integration.
-3. **Smooth Reanimated Transitions**: Real high-performance physics-based native animations out-of-the-box (no clunky CSS animations).
-4. **Accessible by Default**: Powered by industry-standard accessibility patterns adapted for universal rendering.`
-  },
-  installation: {
-    title: "Installation",
-    description: "How to set up and configure your project for Kibra UI.",
-    slug: "installation",
-    content: `### Step 1: Install Peer Dependencies
-
-Kibra UI requires universal rendering libraries to bridge the gap between React Native and the Web. Run the following command in your terminal:
+If you have an existing Expo project, run:
 
 \`\`\`bash
-pnpm add @rn-primitives/accordion react-native-web react-native-reanimated class-variance-authority clsx tailwind-merge lucide-react tw-animate-css
+npx kibra init
+npx kibra add button
 \`\`\`
 
-### Step 2: Configure Path Shims
+If you're starting from scratch:
 
-To ensure seamless importing across environments, make sure your \`tsconfig.json\` and bundler are aliased to resolve React Native shims for the Web.
-
-Add the following to your \`tsconfig.app.json\` under \`compilerOptions.paths\`:
-
-\`\`\`json
-{
-  "compilerOptions": {
-    "paths": {
-      "react-native": ["./src/shims/react-native-shim.tsx"],
-      "react-native-reanimated": ["./src/shims/react-native-reanimated-shim.tsx"],
-      "@rn-primitives/accordion": ["./src/shims/rn-primitives-accordion-shim.tsx"],
-      "lucide-react-native": ["./node_modules/lucide-react"],
-      "@/*": ["./src/*"]
-    }
-  }
-}
+\`\`\`bash
+npx kibra create my-new-app
 \`\`\`
 
-### Step 3: Add Tailwind CSS Setup
+---
 
-Kibra UI components are styled using Tailwind. In Tailwind v4, styles are imported directly in your main CSS file:
+## 🛠️ Requirements
 
-\`\`\`css
-/* src/index.css */
-@import "tailwindcss";
-@import "tw-animate-css";
-@import "shadcn/tailwind.css";
-\`\`\``
-  },
-  cli: {
-    title: "Command Line Interface",
-    description: "Initialize, configure, and add components to your workspace instantly.",
-    slug: "cli",
-    content: `### The Kibra CLI
+Before you begin, ensure you have the following installed:
+- **Node.js 20+**
+- **Expo SDK 50+**
+- **NativeWind v4** (Kibra handles this automatically in \`create\` mode!)
 
-The Kibra CLI simplifies the process of scaffold-building by dynamically copying universal component files straight into your local codebase.
+---
 
-### Initialization
+## 📖 Step-by-Step Tutorial
 
-Initialize Kibra in your project directory:
+### 1. Initialize your project
+Kibra needs a \`kibra.json\` file to know where to place your components and how to map your aliases.
 
 \`\`\`bash
 npx kibra init
 \`\`\`
+This will create a default configuration:
+- \`components\`: mapped to \`@/components/ui\`
+- \`utils\`: mapped to \`@/lib/utils\`
 
-This command creates a configuration file and verifies your Tailwind CSS / path aliases are correctly established.
+### 2. Browse the Showroom
+Visit the [Kibra Showroom](https://user.github.io/kibra) to see all available components.
 
-### Adding Components
-
-Add components individually using the \`add\` command:
+### 3. Add your first component
+Let's add a Button:
 
 \`\`\`bash
 npx kibra add button
-npx kibra add accordion
-npx kibra add alert
+\`\`\`
+**What happens behind the scenes?**
+1. Kibra fetches the component metadata from our registry.
+2. It detects required NPM dependencies (like \`class-variance-authority\`).
+3. It installs them using your preferred package manager.
+4. It writes the component file to your project, automatically updating imports to match your project's aliases.
+
+### 4. Start building
+Import your new component and start building your UI:
+
+\`\`\`tsx
+import { Button } from "@/components/ui/button";
+
+export default function HomeScreen() {
+  return (
+    <Button label="Hello Kibra!" onPress={() => console.log("Pressed!")} />
+  );
+}
 \`\`\`
 
-This will automatically write the components into your local \`src/components/ui/\` folder, ready to be customized.`
+---
+
+## 💡 Pro Tips
+- **Dry Run**: Curious what \`add\` will do? Use \`npx kibra add button --dry-run\`.
+- **Minimal Mode**: Use \`npx kibra create --template minimal\` for a bare-bones setup.`
+  },
+  commands: {
+    title: "Command Reference",
+    description: "Master the Kibra CLI with this comprehensive guide to every command and flag.",
+    slug: "commands",
+    content: `# 🛠️ Command Reference
+
+Master the Kibra CLI with this comprehensive guide to every command, flag, and option.
+
+---
+
+## \`kibra create <name>\`
+The primary entry point for new projects.
+
+| Flag | Alpha | Description |
+| :--- | :---: | :--- |
+| \`-t, --template\` | \`minimal\` \\| \`full\` | Choose a project starter template. |
+| \`-c, --clean\` | Boolean | Skip pre-installing baseline components (\`button\`, \`utils\`). |
+| \`-n, --no-icons\` | Boolean | Skip icon library installation entirely. |
+
+**Example:**
+\`\`\`bash
+npx kibra create awesome-app --template full --clean
+\`\`\`
+
+---
+
+## \`kibra add <component>\`
+Adds a component from the registry to your local project.
+
+| Flag | Type | Description |
+| :--- | :---: | :--- |
+| \`-r, --registry\` | URL \\| Path | Use a custom registry URL or local folder. |
+| \`-d, --dry-run\` | Boolean | Preview file changes and dependency installs without writing. |
+
+**Component Aliases:**
+You can target specific registries using the \`alias/name\` syntax:
+\`\`\`bash
+npx kibra add my-custom-reg/special-card
+\`\`\`
+
+---
+
+## \`kibra init\`
+Generates a \`kibra.json\` configuration file in your current directory. Use this to retrofit Kibra into an existing Expo project.
+
+---
+
+## \`kibra list\`
+Fetches and displays all available components in the registry.
+
+| Flag | Type | Description |
+| :--- | :---: | :--- |
+| \`-r, --registry\` | URL \\| Path | List components from a specific registry. |
+
+---
+
+## \`kibra setup-nativewind\`
+An interactive guide to setting up NativeWind v4, Tailwind CSS, and your preferred icon library in any Expo project. Use this if you already have a project but want the Kibra styling engine.
+
+---
+
+## \`kibra build\`
+*(Developer Only)* Used to build the JSON registry metadata from a directory of source files.
+
+| Flag | Type | Description |
+| :--- | :---: | :--- |
+| \`-i, --input\` | Path | Directory containing component source files. |
+| \`-o, --output\` | Path | Directory to output the JSON artifacts. |
+
+---
+
+## Global Options
+- \`-V, --version\`: Output the current version of Kibra.
+- \`-h, --help\`: Display help for any command.`
+  },
+  architecture: {
+    title: "Architecture & Philosophy",
+    description: "Why we built Kibra and how it handles your code with transactional safety.",
+    slug: "architecture",
+    content: `# 🧠 Architecture & Philosophy
+
+Why did we build Kibra? And more importantly, how does it handle your code with such precision?
+
+## The "Blueprint" Philosophy
+Unlike traditional component libraries that ship compiled code in \`node_modules\`, Kibra ships **Blueprints**. 
+
+When you run \`add\`, you are not installing a package; you are "forking" a source file into your own codebase. This gives you 100% control over the styling, props, and behavior of your UI.
+
+---
+
+## Technical Core
+
+### 1. AST-Powered Dependency Detection
+Kibra doesn't use fragile Regex to find dependencies. We use the **TypeScript Compiler API** to parse your source code into an Abstract Syntax Tree (AST). 
+- We detect every \`import\` statement.
+- We distinguish between "External" (NPM) and "Registry" (Local) dependencies.
+- We auto-generate the \`registry.json\` metadata so you don't have to maintain it manually.
+
+### 2. Template Interpolation Engine
+When a component is "teleported" from our registry to your project, it goes through our interpolation engine:
+- **Alias Mapping**: If your project uses \`@ui/\` instead of \`@/components/ui\`, Kibra detects this and rewrites the imports on the fly.
+- **Token Replacement**: We use \`{{UTILS_ALIAS}}\` and \`{{COMPONENTS_ALIAS}}\` tokens in our source files to ensure perfect fitment regardless of your folder structure.
+
+### 3. Atomic Writes with Transactional Safety
+To avoid corrupting your project during a crash, Kibra uses an **Atomic Write Pattern**:
+1. Files are written to a \`.kibra-tmp-*\` file first.
+2. Only after a successful write is the file renamed to its final target.
+3. If an error occurs, the temporary files are automatically cleaned up.
+
+---
+
+## Data Flow
+
+\`\`\`
++------------------+     +------------------+     +------------------------+
+|  Registry Source | --> | Registry Builder | --> | dist-registry JSON     |
++------------------+     +------------------+     +------------------------+
+                                                              |
+                                                              v
++------------------+                              +------------------------+
+| User kibra.json  | ---------------------------> |       Kibra CLI        |
++------------------+                              +------------------------+
+                                                              |
+                                           +------------------+------------------+
+                                           |                                     |
+                                           v                                     v
+                               +-----------------------+             +-----------------------+
+                               | User Project Files    |             | NPM Install (Deps)    |
+                               +-----------------------+             +-----------------------+
+\`\`\`
+
+### Registry Integrity
+Every push to the Kibra main branch triggers a CI workflow that rebuilds the entire JSON registry, ensuring that the components you see in the Showroom are always perfectly synced with the code in the repo.
+
+---
+
+## Design Choices
+- **Zero-Dependency Runtime**: Once a component is in your project, it has no connection back to Kibra. You own the code.
+- **A11y First**: Every component in the Kibra registry must pass an accessibility audit before being merged.
+- **NativeWind Optimized**: Our engine is specifically tuned for Tailwind CSS in React Native.`
+  },
+  troubleshooting: {
+    title: "Troubleshooting",
+    description: "Common configuration, styling, and dependency snags and how to fix them.",
+    slug: "troubleshooting",
+    content: `# 🩹 Troubleshooting
+
+Running into a snag? Don't worry, we've got you covered. Here are the most common issues and how to fix them.
+
+---
+
+## 🏗️ Configuration Issues
+
+### "kibra.json not found"
+**Symptoms:** Commands like \`add\` or \`list\` fail with a configuration error.
+**Fix:** Run \`npx kibra init\` in your project root to create your configuration file.
+
+### Alias Conflicts
+**Symptoms:** Imports in added components look like \`@/lib/utils\` but your project uses a different path.
+**Fix:** Update your \`kibra.json\` with the correct aliases:
+\`\`\`json
+{
+  "aliases": {
+    "utils": "src/lib/utils",
+    "components": "src/components/ui"
+  }
+}
+\`\`\`
+
+---
+
+## 💅 Styling Issues
+
+### Tailwind styles aren't applying
+**Symptoms:** Components appear without styling or with basic defaults.
+**Fix:** 
+1. Ensure \`nativewind\` and \`tailwindcss\` are installed.
+2. Check your \`tailwind.config.js\` to ensure Kibra's component paths are included in the \`content\` array:
+\`\`\`javascript
+module.exports = {
+  content: ["./app/**/*.{js,jsx,ts,tsx}", "./components/**/*.{js,jsx,ts,tsx}"],
+  // ...
+};
+\`\`\`
+
+---
+
+## 📦 Dependency Issues
+
+### "Module not found" after installation
+**Symptoms:** You ran \`kibra add\`, but the app crashes saying a module (e.g. \`react-native-reanimated\`) is missing.
+**Fix:** Sometimes package managers need a kick. Try:
+- **npm**: \`npm install\`
+- **pnpm**: \`pnpm install\`
+- **expo**: \`npx expo install --fix\`
+
+---
+
+## 🛠️ CLI Crashes
+
+### Permission Denied
+**Symptoms:** CLI fails to write files to your project.
+**Fix:** Ensure you have write permissions to the directory. Avoid running with \`sudo\` as it can corrupt your \`node_modules\` permissions.
+
+### Update Notice won't go away
+**Symptoms:** CLI keeps telling you to update even after you have.
+**Fix:** Kibra caches update checks for 24 hours. You can force a fresh check by clearing your global npm cache, or simply wait for the cache to expire.
+
+---
+
+## 🆘 Still Need Help?
+- **GitHub Issues**: Report bugs or request features at [github.com/user/kibra/issues](https://github.com/user/kibra/issues).`
+  },
+  "registry-guide": {
+    title: "Custom Registries",
+    description: "Learn how to build, package, and host your own custom Kibra registries.",
+    slug: "registry-guide",
+    content: `# 🚀 Custom Registries Guide
+
+Let's build a component registry from scratch.
+
+### 1. Structure your components
+Create a folder named \`my-ui\` and add a button:
+\`\`\`bash
+mkdir -p my-ui/ui
+# Create a component in my-ui/ui/my-btn.tsx
+\`\`\`
+
+### 2. Run the Kibra Builder
+You don't need to install a separate tool. The builder is part of the \`kibra\` CLI:
+
+\`\`\`bash
+npx kibra build --input ./my-ui --output ./dist-registry
+\`\`\`
+
+**Check the result:**
+Look inside \`./dist-registry/my-btn.json\`. You'll see that Kibra has automatically:
+- Detected all your \`import\` statements.
+- Listed your NPM dependencies.
+- Packaged your source code into a JSON string.
+
+### 3. Go Live
+Upload that \`./dist-registry\` folder to **GitHub Pages**, **Vercel**, or even a **shared Dropbox folder**. 
+
+**Your users can now do this:**
+\`\`\`bash
+npx kibra add my-btn --registry https://your-hosted-url.com
+\`\`\`
+
+---
+
+## 🏗️ How it Works (The Protocol)
+Kibra uses a standardized folder structure to detect component types:
+
+\`\`\`
+/my-collection
+  /ui       # Standard UI components (Button, Card, etc.)
+  /lib      # Shared logic and utilities
+  /hooks    # Custom React hooks
+\`\`\`
+
+### Important: Use Alias Tokens
+To ensure your components work in *any* user project, use our **Alias Tokens** in your source code:
+
+- \`{{UTILS_ALIAS}}\`: Resolves to the user's local utilities path.
+- \`{{COMPONENTS_ALIAS}}\`: Resolves to the user's local components path.
+
+**Example:**
+\`\`\`tsx
+import { cn } from "{{UTILS_ALIAS}}";
+import { Button } from "{{COMPONENTS_ALIAS}}/button";
+\`\`\`
+
+---
+
+## 2. Generating the Registry
+Once your components are ready, use the Kibra CLI to build the metadata. 
+
+**Example Build Command:**
+\`\`\`bash
+npx kibra build --input ./my-collection --output ./public-registry
+\`\`\`
+
+**What this does:**
+- Scans all files recursively.
+- Uses **AST Analysis** to detect NPM dependencies automatically.
+- Generates an \`index.json\` and individual \`[component].json\` files.
+
+---
+
+## 3. Hosting & Distribution
+Upload the contents of your \`./public-registry\` folder to any static host. 
+
+### How users install from you:
+Provide your registry URL to your users. They can install your components in two ways:
+
+#### A. Direct Flag
+\`\`\`bash
+npx kibra add button --registry https://ui.your-brand.com
+\`\`\`
+
+#### B. Permanent Configuration
+Users can add your registry to their \`kibra.json\`:
+\`\`\`json
+{
+  "registries": {
+    "mine": "https://ui.your-brand.com"
+  }
+}
+\`\`\`
+Then they can use your alias: \`npx kibra add mine/button\`.
+
+---
+
+## 📋 Registry Checklist
+- [ ] **NativeWind Ready**: Components use \`cn\` and Tailwind classes.
+- [ ] **A11y Compliant**: Includes \`accessibilityRole\` and \`accessibilityLabel\`.
+- [ ] **Tokenized Imports**: All internal imports use \`{{UTILS_ALIAS}}\` or \`{{COMPONENTS_ALIAS}}\`.
+- [ ] **Standalone**: Components don't rely on hidden global providers.`
   }
 }
 
