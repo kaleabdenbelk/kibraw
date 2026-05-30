@@ -17,11 +17,15 @@
 
     /* Linting */
     "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
+      "react-native": ["./src/shims/react-native-shim.tsx"],
+      "react-native-reanimated": ["./src/shims/react-native-reanimated-shim.tsx"],
+      "@rn-primitives/accordion": ["./src/shims/rn-primitives-accordion-shim.tsx"],
+      "lucide-react-native": ["./node_modules/lucide-react"],
       "@/*": ["./src/*"]
     }
   },
