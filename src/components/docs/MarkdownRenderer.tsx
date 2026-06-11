@@ -50,7 +50,8 @@ export function MarkdownRenderer({ content, copiedText, onCopy }: MarkdownRender
               return (
                 <div className="my-8">
                   <CodeBlock
-                    label={match[1] === "bash" ? "terminal" : match[1]}
+                    label={match[1] === "bash" || match[1] === "sh" ? "terminal" : match[1]}
+                    language={match[1]}
                     code={String(children).replace(/\n$/, "")}
                     copyId={`code-${Math.random().toString(36).substr(2, 9)}`}
                     copiedText={copiedText}

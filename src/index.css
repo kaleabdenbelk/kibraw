@@ -221,7 +221,7 @@
     --prose-bold: var(--color-foreground);
     --prose-code: var(--color-foreground);
     --prose-pre-code: white;
-    --prose-pre-bg: color-mix(in oklch, var(--color-background), black 20%);
+    --prose-pre-bg: color-mix(black 20%);
     --prose-quotes: var(--color-muted-foreground);
 
     color: var(--prose-body);

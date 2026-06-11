@@ -50,7 +50,7 @@ export function LandingPage() {
               </a>
             </div>
             <div className="mt-8 max-w-md">
-              <InlineCommand command="npx nativeui@latest add button" />
+              <InlineCommand command="npx Kibra@latest add button" />
             </div>
           </div>
 
@@ -146,7 +146,7 @@ export function LandingPage() {
               to="/docs/installation"
               className="inline-flex items-center gap-2 rounded-md bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90"
             >
-              Install NativeUI <ArrowRight className="h-4 w-4" />
+              Install Kibra <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
         </div>
@@ -156,7 +156,7 @@ export function LandingPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 flex items-center justify-between text-sm text-muted-foreground">
           <div className="flex items-center gap-2">
             <Smartphone className="h-4 w-4" />
-            <span>NativeUI</span>
+            <span>Kibra</span>
           </div>
           <div>Built for React Native + NativeWind.</div>
         </div>
