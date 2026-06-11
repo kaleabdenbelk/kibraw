@@ -1,0 +1,266 @@
+[
+  {
+    "name": "utils",
+    "type": "registry:lib",
+    "dependencies": [
+      "clsx",
+      "tailwind-merge"
+    ],
+    "registryDependencies": []
+  },
+  {
+    "name": "accordion",
+    "type": "registry:ui",
+    "dependencies": [
+      "@rn-primitives/accordion",
+      "lucide-react-native"
+    ],
+    "registryDependencies": [
+      "utils"
+    ]
+  },
+  {
+    "name": "alert-dialog",
+    "type": "registry:ui",
+    "dependencies": [
+      "@rn-primitives/alert-dialog"
+    ],
+    "registryDependencies": [
+      "button",
+      "utils"
+    ]
+  },
+  {
+    "name": "alert",
+    "type": "registry:ui",
+    "dependencies": [
+      "class-variance-authority"
+    ],
+    "registryDependencies": [
+      "utils"
+    ]
+  },
+  {
+    "name": "aspect-ratio",
+    "type": "registry:ui",
+    "dependencies": [
+      "@rn-primitives/aspect-ratio"
+    ],
+    "registryDependencies": []
+  },
+  {
+    "name": "avatar",
+    "type": "registry:ui",
+    "dependencies": [
+      "@rn-primitives/avatar",
+      "expo-image"
+    ],
+    "registryDependencies": [
+      "utils"
+    ]
+  },
+  {
+    "name": "badge",
+    "type": "registry:ui",
+    "dependencies": [
+      "class-variance-authority"
+    ],
+    "registryDependencies": [
+      "utils"
+    ]
+  },
+  {
+    "name": "button",
+    "type": "registry:ui",
+    "dependencies": [
+      "class-variance-authority"
+    ],
+    "registryDependencies": [
+      "utils"
+    ]
+  },
+  {
+    "name": "card",
+    "type": "registry:ui",
+    "dependencies": [],
+    "registryDependencies": [
+      "utils"
+    ]
+  },
+  {
+    "name": "checkbox",
+    "type": "registry:ui",
+    "dependencies": [
+      "@rn-primitives/checkbox",
+      "lucide-react-native"
+    ],
+    "registryDependencies": [
+      "utils"
+    ]
+  },
+  {
+    "name": "dialog",
+    "type": "registry:ui",
+    "dependencies": [
+      "@rn-primitives/dialog",
+      "lucide-react-native"
+    ],
+    "registryDependencies": [
+      "utils"
+    ]
+  },
+  {
+    "name": "drawer",
+    "type": "registry:ui",
+    "dependencies": [],
+    "registryDependencies": [
+      "utils"
+    ]
+  },
+  {
+    "name": "dropdown-menu",
+    "type": "registry:ui",
+    "dependencies": [
+      "@rn-primitives/dropdown-menu",
+      "lucide-react-native"
+    ],
+    "registryDependencies": [
+      "utils"
+    ]
+  },
+  {
+    "name": "input",
+    "type": "registry:ui",
+    "dependencies": [],
+    "registryDependencies": [
+      "utils"
+    ]
+  },
+  {
+    "name": "label",
+    "type": "registry:ui",
+    "dependencies": [
+      "@rn-primitives/label",
+      "class-variance-authority"
+    ],
+    "registryDependencies": [
+      "utils"
+    ]
+  },
+  {
+    "name": "modal",
+    "type": "registry:ui",
+    "dependencies": [],
+    "registryDependencies": [
+      "utils"
+    ]
+  },
+  {
+    "name": "popover",
+    "type": "registry:ui",
+    "dependencies": [
+      "@rn-primitives/popover"
+    ],
+    "registryDependencies": [
+      "utils"
+    ]
+  },
+  {
+    "name": "progress",
+    "type": "registry:ui",
+    "dependencies": [
+      "@rn-primitives/progress"
+    ],
+    "registryDependencies": [
+      "utils"
+    ]
+  },
+  {
+    "name": "radio-group",
+    "type": "registry:ui",
+    "dependencies": [
+      "@rn-primitives/radio-group",
+      "lucide-react-native"
+    ],
+    "registryDependencies": [
+      "utils"
+    ]
+  },
+  {
+    "name": "separator",
+    "type": "registry:ui",
+    "dependencies": [
+      "@rn-primitives/separator"
+    ],
+    "registryDependencies": [
+      "utils"
+    ]
+  },
+  {
+    "name": "skeleton",
+    "type": "registry:ui",
+    "dependencies": [],
+    "registryDependencies": [
+      "utils"
+    ]
+  },
+  {
+    "name": "slider",
+    "type": "registry:ui",
+    "dependencies": [
+      "@rn-primitives/slider"
+    ],
+    "registryDependencies": [
+      "utils"
+    ]
+  },
+  {
+    "name": "switch",
+    "type": "registry:ui",
+    "dependencies": [
+      "@rn-primitives/switch"
+    ],
+    "registryDependencies": [
+      "utils"
+    ]
+  },
+  {
+    "name": "tabs",
+    "type": "registry:ui",
+    "dependencies": [
+      "@rn-primitives/tabs"
+    ],
+    "registryDependencies": [
+      "utils"
+    ]
+  },
+  {
+    "name": "textarea",
+    "type": "registry:ui",
+    "dependencies": [],
+    "registryDependencies": [
+      "utils"
+    ]
+  },
+  {
+    "name": "toggle",
+    "type": "registry:ui",
+    "dependencies": [
+      "@rn-primitives/toggle",
+      "class-variance-authority"
+    ],
+    "registryDependencies": [
+      "utils"
+    ]
+  },
+  {
+    "name": "tooltip",
+    "type": "registry:ui",
+    "dependencies": [
+      "@rn-primitives/tooltip"
+    ],
+    "registryDependencies": [
+      "utils"
+    ]
+  }
+]

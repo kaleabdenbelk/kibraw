@@ -1,0 +1,18 @@
+{
+  "name": "popover",
+  "type": "registry:ui",
+  "dependencies": [
+    "@rn-primitives/popover"
+  ],
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "ui/popover.tsx",
+      "target": "components/ui/popover.tsx",
+      "type": "registry:ui",
+      "content": "import * as PopoverPrimitive from \"@rn-primitives/popover\";\nimport * as React from \"react\";\nimport { StyleSheet, View } from \"react-native\";\nimport Animated, { FadeIn, FadeOut } from \"react-native-reanimated\";\nimport { cn } from \"{{UTILS_ALIAS}}\";\n\nconst Popover = PopoverPrimitive.Root;\n\nconst PopoverTrigger = PopoverPrimitive.Trigger;\n\nconst PopoverAnchor = PopoverPrimitive.Anchor;\n\nconst PopoverContent = React.forwardRef<\n\tReact.ElementRef<typeof PopoverPrimitive.Content>,\n\tReact.ComponentPropsWithoutRef<typeof PopoverPrimitive.Content>\n>(({ className, align = \"center\", sideOffset = 4, ...props }, ref) => (\n\t<PopoverPrimitive.Portal>\n\t\t<PopoverPrimitive.Content\n\t\t\tref={ref}\n\t\t\talign={align}\n\t\t\tsideOffset={sideOffset}\n\t\t\tclassName={cn(\n\t\t\t\t\"z-50 w-72 rounded-md border bg-white p-4 shadow-md outline-none dark:bg-slate-950 dark:border-slate-800\",\n\t\t\t\tclassName,\n\t\t\t)}\n\t\t\t{...props}\n\t\t\tasChild\n\t\t>\n\t\t\t<Animated.View entering={FadeIn} exiting={FadeOut}>\n\t\t\t\t{props.children}\n\t\t\t</Animated.View>\n\t\t</PopoverPrimitive.Content>\n\t</PopoverPrimitive.Portal>\n));\nPopoverContent.displayName = PopoverPrimitive.Content.displayName;\n\nexport { Popover, PopoverAnchor, PopoverContent, PopoverTrigger };\n"
+    }
+  ]
+}

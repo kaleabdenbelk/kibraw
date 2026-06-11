@@ -1,0 +1,16 @@
+{
+  "name": "textarea",
+  "type": "registry:ui",
+  "dependencies": [],
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "ui/textarea.tsx",
+      "target": "components/ui/textarea.tsx",
+      "type": "registry:ui",
+      "content": "import * as React from \"react\";\nimport { TextInput } from \"react-native\";\nimport { cn } from \"{{UTILS_ALIAS}}\";\n\nexport interface TextareaProps\n\textends React.ComponentPropsWithoutRef<typeof TextInput> {}\n\nconst Textarea = React.forwardRef<\n\tReact.ElementRef<typeof TextInput>,\n\tTextareaProps\n>(({ className, ...props }, ref) => {\n\treturn (\n\t\t<TextInput\n\t\t\tref={ref}\n\t\t\tmultiline\n\t\t\tnumberOfLines={4}\n\t\t\ttextAlignVertical=\"top\"\n\t\t\tclassName={cn(\n\t\t\t\t\"flex min-h-[80px] w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-500 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-50 dark:placeholder:text-slate-400\",\n\t\t\t\tclassName,\n\t\t\t)}\n\t\t\t{...props}\n\t\t/>\n\t);\n});\nTextarea.displayName = \"Textarea\";\n\nexport { Textarea };\n"
+    }
+  ]
+}

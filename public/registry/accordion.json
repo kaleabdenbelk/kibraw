@@ -1,0 +1,19 @@
+{
+  "name": "accordion",
+  "type": "registry:ui",
+  "dependencies": [
+    "@rn-primitives/accordion",
+    "lucide-react-native"
+  ],
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "ui/accordion.tsx",
+      "target": "components/ui/accordion.tsx",
+      "type": "registry:ui",
+      "content": "import * as AccordionPrimitive from \"@rn-primitives/accordion\";\nimport { ChevronDown } from \"lucide-react-native\";\nimport * as React from \"react\";\nimport { Text, View } from \"react-native\";\nimport Animated, {\n\tFadeIn,\n\tFadeOut,\n\tLinearTransition,\n\tuseAnimatedStyle,\n\twithTiming,\n} from \"react-native-reanimated\";\nimport { cn } from \"{{UTILS_ALIAS}}\";\n\nconst Accordion = AccordionPrimitive.Root;\n\nconst AccordionItem = React.forwardRef<\n\tReact.ElementRef<typeof AccordionPrimitive.Item>,\n\tReact.ComponentPropsWithoutRef<typeof AccordionPrimitive.Item>\n>(({ className, ...props }, ref) => (\n\t<AccordionPrimitive.Item\n\t\tref={ref}\n\t\tclassName={cn(\"border-b border-slate-200 dark:border-slate-800\", className)}\n\t\t{...props}\n\t/>\n));\nAccordionItem.displayName = \"AccordionItem\";\n\nconst AccordionTrigger = React.forwardRef<\n\tReact.ElementRef<typeof AccordionPrimitive.Trigger>,\n\tReact.ComponentPropsWithoutRef<typeof AccordionPrimitive.Trigger>\n>(({ className, children, ...props }, ref) => {\n\tconst { isExpanded } = AccordionPrimitive.useItemContext();\n\n\tconst animatedStyle = useAnimatedStyle(() => {\n\t\treturn {\n\t\t\ttransform: [{ rotate: withTiming(isExpanded ? \"180deg\" : \"0deg\") }],\n\t\t};\n\t});\n\n\treturn (\n\t\t<AccordionPrimitive.Header className=\"flex w-full\">\n\t\t\t<AccordionPrimitive.Trigger\n\t\t\t\tref={ref}\n\t\t\t\tclassName={cn(\n\t\t\t\t\t\"w-full flex-row items-center justify-between py-4\",\n\t\t\t\t\tclassName,\n\t\t\t\t)}\n\t\t\t\t{...props}\n\t\t\t>\n\t\t\t\t{typeof children === 'string' ? (\n\t\t\t\t\t<Text className=\"text-sm font-medium text-slate-900 dark:text-slate-50\">\n\t\t\t\t\t\t{children}\n\t\t\t\t\t</Text>\n\t\t\t\t) : (\n\t\t\t\t\tchildren as React.ReactNode\n\t\t\t\t)}\n\t\t\t\t<Animated.View style={animatedStyle}>\n\t\t\t\t\t<ChevronDown\n\t\t\t\t\t\tsize={16}\n\t\t\t\t\t\tclassName=\"text-slate-500 dark:text-slate-400\"\n\t\t\t\t\t/>\n\t\t\t\t</Animated.View>\n\t\t\t</AccordionPrimitive.Trigger>\n\t\t</AccordionPrimitive.Header>\n\t);\n});\nAccordionTrigger.displayName = AccordionPrimitive.Trigger.displayName;\n\nconst AccordionContent = React.forwardRef<\n\tReact.ElementRef<typeof AccordionPrimitive.Content>,\n\tReact.ComponentPropsWithoutRef<typeof AccordionPrimitive.Content>\n>(({ className, children, ...props }, ref) => (\n\t<AccordionPrimitive.Content\n\t\tref={ref}\n\t\tclassName=\"overflow-hidden\"\n\t\t{...props}\n\t>\n\t\t<Animated.View\n\t\t\tentering={FadeIn}\n\t\t\texiting={FadeOut}\n\t\t\tlayout={LinearTransition}\n\t\t\tclassName={cn(\"pb-4 pt-0\", className)}\n\t\t>\n\t\t\t{typeof children === 'string' ? (\n\t\t\t\t<Text className=\"text-sm text-slate-600 dark:text-slate-400\">\n\t\t\t\t\t{children}\n\t\t\t\t</Text>\n\t\t\t) : (\n\t\t\t\tchildren as React.ReactNode\n\t\t\t)}\n\t\t</Animated.View>\n\t</AccordionPrimitive.Content>\n));\nAccordionContent.displayName = AccordionPrimitive.Content.displayName;\n\nexport { Accordion, AccordionItem, AccordionTrigger, AccordionContent };\n"
+    }
+  ]
+}

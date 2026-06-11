@@ -1,0 +1,18 @@
+{
+  "name": "slider",
+  "type": "registry:ui",
+  "dependencies": [
+    "@rn-primitives/slider"
+  ],
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "ui/slider.tsx",
+      "target": "components/ui/slider.tsx",
+      "type": "registry:ui",
+      "content": "import * as SliderPrimitive from \"@rn-primitives/slider\";\nimport * as React from \"react\";\nimport { cn } from \"{{UTILS_ALIAS}}\";\n\nconst Slider = React.forwardRef<\n\tReact.ElementRef<typeof SliderPrimitive.Root>,\n\tReact.ComponentPropsWithoutRef<typeof SliderPrimitive.Root>\n>(({ className, ...props }, ref) => {\n\tconst value = props.value ?? [0];\n\n\treturn (\n\t\t<SliderPrimitive.Root\n\t\t\tref={ref}\n\t\t\tclassName={cn(\n\t\t\t\t\"relative flex-row w-full touch-none select-none items-center\",\n\t\t\t\tclassName,\n\t\t\t)}\n\t\t\t{...props}\n\t\t>\n\t\t\t<SliderPrimitive.Track className=\"relative h-1.5 w-full grow overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800\">\n\t\t\t\t<SliderPrimitive.Range className=\"absolute h-full bg-primary\" />\n\t\t\t</SliderPrimitive.Track>\n\t\t\t<SliderPrimitive.Thumb className=\"block h-5 w-5 rounded-full border border-slate-200 bg-white shadow active:scale-110 dark:border-slate-800 dark:bg-slate-950\" />\n\t\t</SliderPrimitive.Root>\n\t);\n});\nSlider.displayName = SliderPrimitive.Root.displayName;\n\nexport { Slider };\n"
+    }
+  ]
+}

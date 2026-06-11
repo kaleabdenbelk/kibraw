@@ -24,57 +24,70 @@ export function ComponentShowcase({ component }: ComponentShowcaseProps) {
   return (
     <div className="space-y-8">
       <div>
-        <div className="flex flex-wrap gap-2 mb-3">
+        <div className="mb-3 flex flex-wrap gap-2">
           {component.badges?.map((badge) => (
             <span
               key={badge}
-              className="text-xs font-semibold bg-kibra-primary/10 dark:bg-kibra-primary-dark/30 text-kibra-primary-dark dark:text-kibra-primary px-2.5 py-0.5 rounded-md"
+              className="rounded-md border border-kibra-primary/20 bg-kibra-primary/10 px-2.5 py-0.5 text-xs font-semibold text-kibra-primary-dark dark:border-kibra-primary/30 dark:bg-kibra-primary/20 dark:text-kibra-primary"
             >
               {badge}
             </span>
           ))}
-          <span className="text-xs font-semibold bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400 px-2.5 py-0.5 rounded-md flex items-center gap-1">
-            <Cpu className="size-3" /> React Native Compatible
+          <span className="flex items-center gap-1.5 rounded-md border border-border/60 bg-slate-100/80 px-2.5 py-0.5 text-xs font-semibold text-slate-600 shadow-sm dark:bg-slate-900/80 dark:text-slate-400">
+            <Cpu className="size-3.5 text-kibra-primary-dark dark:text-kibra-primary" />{" "}
+            React Native Compatible
           </span>
         </div>
-        <h1 className="text-h1 text-slate-900 dark:text-slate-50">{component.title}</h1>
-        <p className="text-body-lg text-muted-foreground mt-2 font-light">{component.description}</p>
+        <h1 className="text-h1 tracking-tight text-slate-900 dark:text-slate-50">
+          {component.title}
+        </h1>
+        <p className="text-body-lg mt-2.5 leading-relaxed font-light text-muted-foreground">
+          {component.description}
+        </p>
       </div>
 
-      <div className="space-y-4">
-        <div className="inline-flex items-center rounded-lg border border-border bg-muted/40 p-1">
+      <div className="space-y-5">
+        <div className="inline-flex items-center rounded-xl border border-border/80 bg-slate-100/60 p-1 dark:bg-slate-900/40">
           <button
             onClick={() => setActiveTab("preview")}
-            className={`px-4 py-1.5 text-sm font-medium rounded-md transition-all cursor-pointer flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring
-              ${
-                activeTab === "preview"
-                  ? "bg-background text-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
+            className={`flex cursor-pointer items-center gap-2 rounded-lg px-4 py-1.5 text-sm font-medium transition-all duration-200 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none ${
+              activeTab === "preview"
+                ? "border border-border/40 bg-white font-semibold text-foreground shadow-sm dark:bg-slate-950"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
             aria-selected={activeTab === "preview"}
             role="tab"
           >
-            <Eye className="size-4" /> Preview
+            <Eye className="size-4 text-kibra-primary-dark dark:text-kibra-primary" />{" "}
+            Preview
           </button>
           <button
             onClick={() => setActiveTab("code")}
-            className={`px-4 py-1.5 text-sm font-medium rounded-md transition-all cursor-pointer flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring
-              ${
-                activeTab === "code"
-                  ? "bg-background text-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
+            className={`flex cursor-pointer items-center gap-2 rounded-lg px-4 py-1.5 text-sm font-medium transition-all duration-200 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none ${
+              activeTab === "code"
+                ? "border border-border/40 bg-white font-semibold text-foreground shadow-sm dark:bg-slate-950"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
             aria-selected={activeTab === "code"}
             role="tab"
           >
-            <Code className="size-4" /> Code
+            <Code className="size-4 text-kibra-primary-dark dark:text-kibra-primary" />{" "}
+            Code
           </button>
         </div>
 
         {activeTab === "preview" && (
-          <div className="space-y-4">
-            <div className="relative flex flex-col min-h-[300px] border border-border/80 rounded-xl bg-muted/30 p-6 md:p-8 justify-center items-center overflow-hidden shadow-elevation-2">
-              <div className="flex-1 flex items-center justify-center p-6 w-full max-w-md">
+          <div className="animate-in space-y-4 duration-200 fade-in">
+            <div
+              className="relative flex min-h-[350px] flex-col items-center justify-center overflow-hidden rounded-2xl border border-border/80 p-6 shadow-elevation-2 md:p-8"
+              style={{
+                backgroundColor: "var(--background)",
+                backgroundImage:
+                  "radial-gradient(var(--border) 1.5px, transparent 1.5px)",
+                backgroundSize: "20px 20px",
+              }}
+            >
+              <div className="flex w-full max-w-md flex-1 items-center justify-center p-6">
                 <ComponentPreviewPanel
                   slug={component.slug}
                   state={state}
@@ -93,21 +106,23 @@ export function ComponentShowcase({ component }: ComponentShowcaseProps) {
         )}
 
         {activeTab === "code" && (
-          <CodeBlock
-            label={`@/components/ui/${component.slug}.tsx`}
-            code={component.code}
-            copyId="comp-src"
-            copiedText={copiedText}
-            onCopy={handleCopy}
-            variant="dark"
-            className="my-4"
-          />
+          <div className="animate-in duration-200 fade-in">
+            <CodeBlock
+              label={`@/components/ui/${component.slug}.tsx`}
+              code={component.code}
+              copyId="comp-src"
+              copiedText={copiedText}
+              onCopy={handleCopy}
+              className="my-4"
+            />
+          </div>
         )}
       </div>
 
-      <div className="space-y-3 pt-6 border-t border-border/60 sticky top-20 z-10 bg-background/95 backdrop-blur-sm py-4 -mx-1 px-1">
-        <h3 className="text-lg font-bold text-slate-900 dark:text-slate-50 flex items-center gap-2">
-          <Terminal className="size-4 text-kibra-primary" /> CLI Installation
+      <div className="sticky top-14 z-10 space-y-3.5 border-t border-border/40 bg-background/90 py-4 pt-8 backdrop-blur-md">
+        <h3 className="flex items-center gap-2.5 text-lg font-bold text-slate-900 dark:text-slate-50">
+          <Terminal className="size-4.5 text-kibra-primary-dark dark:text-kibra-primary" />{" "}
+          CLI Installation
         </h3>
         <CodeBlock
           label="Bash"
@@ -119,7 +134,9 @@ export function ComponentShowcase({ component }: ComponentShowcaseProps) {
       </div>
 
       <div className="space-y-3 pt-4">
-        <h3 className="text-lg font-bold text-slate-900 dark:text-slate-50">Usage Example</h3>
+        <h3 className="text-lg font-bold text-slate-900 dark:text-slate-50">
+          Usage Example
+        </h3>
         <CodeBlock
           label="React (TypeScript)"
           code={component.usage}
@@ -130,7 +147,9 @@ export function ComponentShowcase({ component }: ComponentShowcaseProps) {
       </div>
 
       <div className="space-y-4 pt-4 pb-12">
-        <h3 className="text-lg font-bold text-slate-900 dark:text-slate-50">Props Reference</h3>
+        <h3 className="text-lg font-bold text-slate-900 dark:text-slate-50">
+          Props Reference
+        </h3>
         <PropsTable props={component.props} />
       </div>
     </div>

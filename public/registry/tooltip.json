@@ -1,0 +1,18 @@
+{
+  "name": "tooltip",
+  "type": "registry:ui",
+  "dependencies": [
+    "@rn-primitives/tooltip"
+  ],
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "ui/tooltip.tsx",
+      "target": "components/ui/tooltip.tsx",
+      "type": "registry:ui",
+      "content": "import * as TooltipPrimitive from \"@rn-primitives/tooltip\";\nimport * as React from \"react\";\nimport Animated, { FadeIn, FadeOut } from \"react-native-reanimated\";\nimport { cn } from \"{{UTILS_ALIAS}}\";\n\nconst TooltipProvider = TooltipPrimitive.Provider;\n\nconst Tooltip = TooltipPrimitive.Root;\n\nconst TooltipTrigger = TooltipPrimitive.Trigger;\n\nconst TooltipContent = React.forwardRef<\n\tReact.ElementRef<typeof TooltipPrimitive.Content>,\n\tReact.ComponentPropsWithoutRef<typeof TooltipPrimitive.Content>\n>(({ className, sideOffset = 4, ...props }, ref) => (\n\t<TooltipPrimitive.Portal>\n\t\t<TooltipPrimitive.Content\n\t\t\tref={ref}\n\t\t\tsideOffset={sideOffset}\n\t\t\tclassName={cn(\n\t\t\t\t\"z-50 overflow-hidden rounded-md bg-slate-900 px-3 py-1.5 shadow-md dark:bg-slate-50\",\n\t\t\t\tclassName,\n\t\t\t)}\n\t\t\t{...props}\n\t\t\tasChild\n\t\t>\n\t\t\t<Animated.View entering={FadeIn} exiting={FadeOut}>\n\t\t\t\t<TooltipPrimitive.Text\n\t\t\t\t\tclassName={cn(\n\t\t\t\t\t\t\"text-xs font-medium text-slate-50 dark:text-slate-900\",\n\t\t\t\t\t)}\n\t\t\t\t>\n\t\t\t\t\t{props.children as string}\n\t\t\t\t</TooltipPrimitive.Text>\n\t\t\t</Animated.View>\n\t\t</TooltipPrimitive.Content>\n\t</TooltipPrimitive.Portal>\n));\nTooltipContent.displayName = TooltipPrimitive.Content.displayName;\n\nexport { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger };\n"
+    }
+  ]
+}

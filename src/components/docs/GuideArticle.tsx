@@ -15,22 +15,27 @@ export function GuideArticle({ guide }: GuideArticleProps) {
   const nextSlug = getNextDocSlug(guide.slug)
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-h1 text-slate-900 dark:text-slate-50">{guide.title}</h1>
-        <p className="text-body-lg text-muted-foreground mt-2 font-light">{guide.description}</p>
+    <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="space-y-4">
+        <h1 className="text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl">
+          {guide.title}
+        </h1>
+        <p className="text-xl text-muted-foreground font-light leading-relaxed max-w-2xl">
+          {guide.description}
+        </p>
       </div>
 
-      <div className="border-t border-border mt-6 pt-6 prose-kibra max-w-none space-y-2">
+      <div className="prose-kibra max-w-none">
         {guide.content.split("\n\n").map((block, idx) =>
           renderMarkdownBlock(block, idx, copiedText, handleCopy)
         )}
       </div>
 
-      <div className="border-t border-border mt-10 pt-8 flex justify-end">
-        <Button variant="outline" asChild className="gap-2 group">
+      <div className="border-t border-border mt-16 pt-8 flex items-center justify-between">
+        <div />
+        <Button variant="outline" size="lg" asChild className="gap-2 group rounded-xl px-6 h-12 shadow-sm hover:shadow-md transition-all">
           <Link to={`/docs/${nextSlug}`}>
-            <span>Next step</span>
+            <span className="font-semibold tracking-tight">Next: {nextSlug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}</span>
             <ArrowRight className="size-4 group-hover:translate-x-1 transition-transform" />
           </Link>
         </Button>

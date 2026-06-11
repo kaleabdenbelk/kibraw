@@ -1,0 +1,19 @@
+{
+  "name": "radio-group",
+  "type": "registry:ui",
+  "dependencies": [
+    "@rn-primitives/radio-group",
+    "lucide-react-native"
+  ],
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "ui/radio-group.tsx",
+      "target": "components/ui/radio-group.tsx",
+      "type": "registry:ui",
+      "content": "import * as RadioGroupPrimitive from \"@rn-primitives/radio-group\";\nimport { Circle } from \"lucide-react-native\";\nimport * as React from \"react\";\nimport { View } from \"react-native\";\nimport { cn } from \"{{UTILS_ALIAS}}\";\n\nconst RadioGroup = React.forwardRef<\n\tReact.ElementRef<typeof RadioGroupPrimitive.Root>,\n\tReact.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Root>\n>(({ className, ...props }, ref) => {\n\treturn (\n\t\t<RadioGroupPrimitive.Root\n\t\t\tclassName={cn(\"grid gap-2\", className)}\n\t\t\t{...props}\n\t\t\tref={ref}\n\t\t/>\n\t);\n});\nRadioGroup.displayName = RadioGroupPrimitive.Root.displayName;\n\nconst RadioGroupItem = React.forwardRef<\n\tReact.ElementRef<typeof RadioGroupPrimitive.Item>,\n\tReact.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Item>\n>(({ className, ...props }, ref) => {\n\treturn (\n\t\t<RadioGroupPrimitive.Item\n\t\t\tref={ref}\n\t\t\tclassName={cn(\n\t\t\t\t\"aspect-square h-5 w-5 rounded-full border border-primary items-center justify-center shadow-sm\",\n\t\t\t\tclassName,\n\t\t\t)}\n\t\t\t{...props}\n\t\t>\n\t\t\t<RadioGroupPrimitive.Indicator className=\"items-center justify-center\">\n\t\t\t\t<Circle\n\t\t\t\t\tsize={10}\n\t\t\t\t\tclassName=\"fill-primary text-primary\"\n\t\t\t\t/>\n\t\t\t</RadioGroupPrimitive.Indicator>\n\t\t</RadioGroupPrimitive.Item>\n\t);\n});\nRadioGroupItem.displayName = RadioGroupPrimitive.Item.displayName;\n\nexport { RadioGroup, RadioGroupItem };\n"
+    }
+  ]
+}

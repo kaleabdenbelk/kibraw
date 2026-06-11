@@ -6,30 +6,28 @@ interface PropsTableProps {
 
 export function PropsTable({ props }: PropsTableProps) {
   return (
-    <div className="overflow-x-auto border border-border/80 rounded-xl bg-white dark:bg-slate-950/10 shadow-elevation-2">
-      <table className="w-full text-left border-collapse text-xs sm:text-sm">
+    <div className="overflow-x-auto border border-border rounded-xl bg-card shadow-sm">
+      <table className="w-full text-left border-collapse text-sm">
         <thead>
-          <tr className="border-b border-border bg-slate-50/50 dark:bg-slate-950/40">
-            <th className="p-3 font-semibold text-slate-900 dark:text-slate-50">Prop</th>
-            <th className="p-3 font-semibold text-slate-900 dark:text-slate-50">Type</th>
-            <th className="p-3 font-semibold text-slate-900 dark:text-slate-50">Default</th>
-            <th className="p-3 font-semibold text-slate-900 dark:text-slate-50">Description</th>
+          <tr className="border-b border-border bg-muted/50 transition-colors hover:bg-muted">
+            <th className="h-12 px-4 py-3 font-semibold text-foreground uppercase tracking-wider text-xs">Prop</th>
+            <th className="h-12 px-4 py-3 font-semibold text-foreground uppercase tracking-wider text-xs">Type</th>
+            <th className="h-12 px-4 py-3 font-semibold text-foreground uppercase tracking-wider text-xs">Default</th>
+            <th className="h-12 px-4 py-3 font-semibold text-foreground uppercase tracking-wider text-xs">Description</th>
           </tr>
         </thead>
-        <tbody>
-          {props.map((prop, index) => (
+        <tbody className="divide-y divide-border/60">
+          {props.map((prop) => (
             <tr
               key={prop.name}
-              className={`border-b border-border/50 hover:bg-slate-50/40 dark:hover:bg-slate-900/20 last:border-b-0 ${
-                index % 2 === 1 ? "bg-muted/20" : ""
-              }`}
+              className="transition-colors hover:bg-muted/30"
             >
-              <td className="p-3 font-semibold text-slate-900 dark:text-slate-200 font-mono">{prop.name}</td>
-              <td className="p-3 text-kibra-primary-dark dark:text-kibra-primary font-mono break-all">
+              <td className="px-4 py-3 font-semibold text-foreground font-mono text-[13px]">{prop.name}</td>
+              <td className="px-4 py-3 text-primary font-mono text-[12px] break-all">
                 {prop.type}
               </td>
-              <td className="p-3 text-muted-foreground font-mono">{prop.default}</td>
-              <td className="p-3 text-slate-600 dark:text-slate-300">{prop.description}</td>
+              <td className="px-4 py-3 text-muted-foreground font-mono text-[12px]">{prop.default}</td>
+              <td className="px-4 py-3 text-foreground/80 leading-relaxed">{prop.description}</td>
             </tr>
           ))}
         </tbody>

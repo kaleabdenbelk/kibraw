@@ -1,0 +1,19 @@
+{
+  "name": "label",
+  "type": "registry:ui",
+  "dependencies": [
+    "@rn-primitives/label",
+    "class-variance-authority"
+  ],
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "ui/label.tsx",
+      "target": "components/ui/label.tsx",
+      "type": "registry:ui",
+      "content": "import * as LabelPrimitive from \"@rn-primitives/label\";\nimport { cva, type VariantProps } from \"class-variance-authority\";\nimport * as React from \"react\";\nimport { cn } from \"{{UTILS_ALIAS}}\";\n\nconst labelVariants = cva(\n\t\"text-sm font-medium leading-none text-slate-900 dark:text-slate-50 web:peer-disabled:cursor-not-allowed web:peer-disabled:opacity-70\",\n);\n\nconst Label = React.forwardRef<\n\tReact.ElementRef<typeof LabelPrimitive.Text>,\n\tReact.ComponentPropsWithoutRef<typeof LabelPrimitive.Text> &\n\t\tVariantProps<typeof labelVariants>\n>(({ className, ...props }, ref) => (\n\t<LabelPrimitive.Root>\n\t\t<LabelPrimitive.Text\n\t\t\tref={ref}\n\t\t\tclassName={cn(labelVariants(), className)}\n\t\t\t{...props}\n\t\t/>\n\t</LabelPrimitive.Root>\n));\nLabel.displayName = LabelPrimitive.Text.displayName;\n\nexport { Label };\n"
+    }
+  ]
+}

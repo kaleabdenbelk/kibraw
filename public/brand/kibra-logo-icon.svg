@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-labelledby="kibra-logo-title kibra-logo-desc">
+  <title id="kibra-logo-title">Kibra Logo Icon</title>
+  <desc id="kibra-logo-desc">Dynamic connector icon composed of fluid overlapping ribbons representing cross-platform integration and modern tech.</desc>
+  <defs>
+  </defs>
+
+  <g id="kibra-mark" transform="translate(0, 0)" opacity="0.95">
+    <!-- Fluid Ribbons with overlay for dynamic cross-points -->
+    <path d="M 160 100 Q 220 256 160 412" stroke="#00d8ff" stroke-width="72" fill="none" stroke-linecap="round" />
+    
+    <!-- Top-right arm wrapping in -->
+    <path d="M 370 110 C 270 110, 240 200, 166 280" stroke="#00d8ff" stroke-width="72" fill="none" stroke-linecap="round" />
+    
+    <!-- Bottom-right arm wrapping out -->
+    <path d="M 370 402 C 270 402, 240 312, 166 232" stroke="#00d8ff" stroke-width="72" fill="none" stroke-linecap="round" />
+  </g>
+</svg>

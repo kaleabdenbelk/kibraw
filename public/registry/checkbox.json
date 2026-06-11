@@ -1,0 +1,19 @@
+{
+  "name": "checkbox",
+  "type": "registry:ui",
+  "dependencies": [
+    "@rn-primitives/checkbox",
+    "lucide-react-native"
+  ],
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "ui/checkbox.tsx",
+      "target": "components/ui/checkbox.tsx",
+      "type": "registry:ui",
+      "content": "import * as CheckboxPrimitive from \"@rn-primitives/checkbox\";\nimport { Check } from \"lucide-react-native\";\nimport * as React from \"react\";\nimport { cn } from \"{{UTILS_ALIAS}}\";\n\nconst Checkbox = React.forwardRef<\n\tReact.ElementRef<typeof CheckboxPrimitive.Root>,\n\tReact.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>\n>(({ className, ...props }, ref) => (\n\t<CheckboxPrimitive.Root\n\t\tref={ref}\n\t\tclassName={cn(\n\t\t\t\"peer h-5 w-5 shrink-0 rounded-sm border border-primary shadow-sm items-center justify-center\",\n\t\t\tprops.checked ? \"bg-primary\" : \"bg-transparent\",\n\t\t\tclassName,\n\t\t)}\n\t\t{...props}\n\t>\n\t\t<CheckboxPrimitive.Indicator\n\t\t\tclassName={cn(\"items-center justify-center\")}\n\t\t>\n\t\t\t<Check\n\t\t\t\tsize={14}\n\t\t\t\tstrokeWidth={3}\n\t\t\t\tclassName=\"text-white\"\n\t\t\t/>\n\t\t</CheckboxPrimitive.Indicator>\n\t</CheckboxPrimitive.Root>\n));\nCheckbox.displayName = CheckboxPrimitive.Root.displayName;\n\nexport { Checkbox };\n"
+    }
+  ]
+}

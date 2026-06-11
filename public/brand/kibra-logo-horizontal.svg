@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 200" width="800" height="200" role="img" aria-labelledby="kibra-logo-title kibra-logo-desc">
+  <title id="kibra-logo-title">Kibra Logo (Horizontal)</title>
+  <desc id="kibra-logo-desc">Kibra brand wordmark in horizontal layout with dynamic connector icon and subtitle, supporting auto dark-mode switching.</desc>
+  <defs>
+    <style>
+      .kibra-text-title {
+        font-family: "Inter Variable", Inter, system-ui, -apple-system, sans-serif;
+        font-size: 72px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        fill: #131b2e;
+      }
+      .kibra-text-subtitle {
+        font-family: "Inter Variable", Inter, system-ui, -apple-system, sans-serif;
+        font-size: 18px;
+        font-weight: 500;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        fill: #6c797e;
+      }
+      @media (prefers-color-scheme: dark) {
+        .kibra-text-title {
+          fill: #faf8ff;
+        }
+        .kibra-text-subtitle {
+          fill: #bbc9ce;
+        }
+      }
+    </style>
+  </defs>
+
+  <!-- Scaled Icon Group (translate to y=20, x=20, scale to 160x160) -->
+  <g transform="translate(20, 20) scale(0.3125)" opacity="0.95">
+    <path d="M 160 100 Q 220 256 160 412" stroke="#00d8ff" stroke-width="72" fill="none" stroke-linecap="round" />
+    <path d="M 370 110 C 270 110, 240 200, 166 280" stroke="#00d8ff" stroke-width="72" fill="none" stroke-linecap="round" />
+    <path d="M 370 402 C 270 402, 240 312, 166 232" stroke="#00d8ff" stroke-width="72" fill="none" stroke-linecap="round" />
+  </g>
+
+  <!-- Typography Lockup -->
+  <g>
+    <text x="210" y="112" class="kibra-text-title">Kibra</text>
+    <text x="214" y="148" class="kibra-text-subtitle">Cross-Platform UI System</text>
+  </g>
+</svg>

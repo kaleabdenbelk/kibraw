@@ -1,0 +1,18 @@
+{
+  "name": "separator",
+  "type": "registry:ui",
+  "dependencies": [
+    "@rn-primitives/separator"
+  ],
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "ui/separator.tsx",
+      "target": "components/ui/separator.tsx",
+      "type": "registry:ui",
+      "content": "import * as SeparatorPrimitive from \"@rn-primitives/separator\";\nimport * as React from \"react\";\nimport { cn } from \"{{UTILS_ALIAS}}\";\n\nconst Separator = React.forwardRef<\n\tReact.ElementRef<typeof SeparatorPrimitive.Root>,\n\tReact.ComponentPropsWithoutRef<typeof SeparatorPrimitive.Root>\n>(\n\t(\n\t\t{ className, orientation = \"horizontal\", decorative = true, ...props },\n\t\tref,\n\t) => (\n\t\t<SeparatorPrimitive.Root\n\t\t\tref={ref}\n\t\t\tdecorative={decorative}\n\t\t\torientation={orientation}\n\t\t\tclassName={cn(\n\t\t\t\t\"shrink-0 bg-slate-200 dark:bg-slate-800\",\n\t\t\t\torientation === \"horizontal\" ? \"h-[1px] w-full\" : \"h-full w-[1px]\",\n\t\t\t\tclassName,\n\t\t\t)}\n\t\t\t{...props}\n\t\t/>\n\t),\n);\nSeparator.displayName = SeparatorPrimitive.Root.displayName;\n\nexport { Separator };\n"
+    }
+  ]
+}

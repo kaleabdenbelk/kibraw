@@ -1,0 +1,18 @@
+{
+  "name": "tabs",
+  "type": "registry:ui",
+  "dependencies": [
+    "@rn-primitives/tabs"
+  ],
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "ui/tabs.tsx",
+      "target": "components/ui/tabs.tsx",
+      "type": "registry:ui",
+      "content": "import * as TabsPrimitive from \"@rn-primitives/tabs\";\nimport * as React from \"react\";\nimport { Text, View } from \"react-native\";\nimport { cn } from \"{{UTILS_ALIAS}}\";\n\nconst Tabs = React.forwardRef<\n\tReact.ElementRef<typeof TabsPrimitive.Root>,\n\tOmit<React.ComponentPropsWithoutRef<typeof TabsPrimitive.Root>, \"value\" | \"onValueChange\"> & {\n\t\tdefaultValue?: string;\n\t\tvalue?: string;\n\t\tonValueChange?: (value: string) => void;\n\t}\n>(({ defaultValue, value: controlledValue, onValueChange: controlledOnValueChange, ...props }, ref) => {\n\tconst [internalValue, setInternalValue] = React.useState(defaultValue || \"\");\n\tconst value = controlledValue !== undefined ? controlledValue : internalValue;\n\tconst onValueChange = (val: string) => {\n\t\tsetInternalValue(val);\n\t\tcontrolledOnValueChange?.(val);\n\t};\n\n\treturn (\n\t\t<TabsPrimitive.Root\n\t\t\tref={ref}\n\t\t\tvalue={value}\n\t\t\tonValueChange={onValueChange}\n\t\t\t{...props}\n\t\t/>\n\t);\n});\nTabs.displayName = \"Tabs\";\n\nconst TabsList = React.forwardRef<\n\tReact.ElementRef<typeof TabsPrimitive.List>,\n\tReact.ComponentPropsWithoutRef<typeof TabsPrimitive.List>\n>(({ className, ...props }, ref) => (\n\t<TabsPrimitive.List\n\t\tref={ref}\n\t\tclassName={cn(\n\t\t\t\"flex-row h-11 items-center justify-center rounded-lg bg-slate-100 p-1 dark:bg-slate-800\",\n\t\t\tclassName,\n\t\t)}\n\t\t{...props}\n\t/>\n));\nTabsList.displayName = TabsPrimitive.List.displayName;\n\nconst TabsTrigger = React.forwardRef<\n\tReact.ElementRef<typeof TabsPrimitive.Trigger>,\n\tReact.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>\n>(({ className, children, ...props }, ref) => {\n\tconst { value } = TabsPrimitive.useRootContext() as any;\n\tconst isActive = value === props.value;\n\n\treturn (\n\t\t<TabsPrimitive.Trigger\n\t\t\tref={ref}\n\t\t\tclassName={cn(\n\t\t\t\t\"flex-1 flex-row items-center justify-center rounded-md px-3 py-1.5\",\n\t\t\t\tisActive\n\t\t\t\t\t? \"bg-white shadow-sm dark:bg-slate-950\"\n\t\t\t\t\t: \"bg-transparent\",\n\t\t\t\tclassName,\n\t\t\t)}\n\t\t\t{...props}\n\t\t>\n\t\t\t{typeof children === 'string' ? (\n\t\t\t\t<Text\n\t\t\t\t\tclassName={cn(\n\t\t\t\t\t\t\"text-sm font-medium\",\n\t\t\t\t\t\tisActive\n\t\t\t\t\t\t\t? \"text-slate-900 dark:text-slate-50\"\n\t\t\t\t\t\t\t: \"text-slate-500 dark:text-slate-400\",\n\t\t\t\t\t)}\n\t\t\t\t>\n\t\t\t\t\t{children}\n\t\t\t\t</Text>\n\t\t\t) : (\n\t\t\t\tchildren as React.ReactNode\n\t\t\t)}\n\t\t</TabsPrimitive.Trigger>\n\t);\n});\nTabsTrigger.displayName = TabsPrimitive.Trigger.displayName;\n\nconst TabsContent = React.forwardRef<\n\tReact.ElementRef<typeof TabsPrimitive.Content>,\n\tReact.ComponentPropsWithoutRef<typeof TabsPrimitive.Content>\n>(({ className, ...props }, ref) => (\n\t<TabsPrimitive.Content\n\t\tref={ref}\n\t\tclassName={cn(\"mt-2\", className)}\n\t\t{...props}\n\t/>\n));\nTabsContent.displayName = TabsPrimitive.Content.displayName;\n\nexport { Tabs, TabsContent, TabsList, TabsTrigger };\n"
+    }
+  ]
+}

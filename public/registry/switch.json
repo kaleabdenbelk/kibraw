@@ -1,0 +1,18 @@
+{
+  "name": "switch",
+  "type": "registry:ui",
+  "dependencies": [
+    "@rn-primitives/switch"
+  ],
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "ui/switch.tsx",
+      "target": "components/ui/switch.tsx",
+      "type": "registry:ui",
+      "content": "import * as SwitchPrimitives from \"@rn-primitives/switch\";\nimport * as React from \"react\";\nimport { cn } from \"{{UTILS_ALIAS}}\";\n\nconst Switch = React.forwardRef<\n\tReact.ElementRef<typeof SwitchPrimitives.Root>,\n\tReact.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root>\n>(({ className, ...props }, ref) => (\n\t<SwitchPrimitives.Root\n\t\tclassName={cn(\n\t\t\t\"peer h-6 w-11 shrink-0 cursor-pointer flex-row items-center rounded-full border-2 border-transparent\",\n\t\t\tprops.checked ? \"bg-primary\" : \"bg-slate-200 dark:bg-slate-800\",\n\t\t\tclassName,\n\t\t)}\n\t\t{...props}\n\t\tref={ref}\n\t>\n\t\t<SwitchPrimitives.Thumb\n\t\t\tclassName={cn(\n\t\t\t\t\"pointer-events-none block h-5 w-5 rounded-full bg-white shadow-md transition-transform\",\n\t\t\t\tprops.checked ? \"translate-x-5\" : \"translate-x-0\",\n\t\t\t)}\n\t\t/>\n\t</SwitchPrimitives.Root>\n));\nSwitch.displayName = SwitchPrimitives.Root.displayName;\n\nexport { Switch };\n"
+    }
+  ]
+}

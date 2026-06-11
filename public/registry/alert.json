@@ -1,0 +1,18 @@
+{
+  "name": "alert",
+  "type": "registry:ui",
+  "dependencies": [
+    "class-variance-authority"
+  ],
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "ui/alert.tsx",
+      "target": "components/ui/alert.tsx",
+      "type": "registry:ui",
+      "content": "import { cva, type VariantProps } from \"class-variance-authority\";\nimport * as React from \"react\";\nimport { Text, View } from \"react-native\";\nimport { cn } from \"{{UTILS_ALIAS}}\";\n\nconst alertVariants = cva(\n\t\"relative w-full rounded-lg border p-4 shadow-sm\",\n\t{\n\t\tvariants: {\n\t\t\tvariant: {\n\t\t\t\tdefault: \"bg-white border-slate-200 dark:bg-slate-950 dark:border-slate-800\",\n\t\t\t\tdestructive:\n\t\t\t\t\t\"border-red-500/50 bg-red-50 dark:bg-red-950/20 dark:border-red-500\",\n\t\t\t},\n\t\t},\n\t\tdefaultVariants: {\n\t\t\tvariant: \"default\",\n\t\t},\n\t},\n);\n\nconst Alert = React.forwardRef<\n\tReact.ElementRef<typeof View>,\n\tReact.ComponentPropsWithoutRef<typeof View> & VariantProps<typeof alertVariants>\n>(({ className, variant, children, ...props }, ref) => (\n\t<View\n\t\tref={ref}\n\t\trole=\"alert\"\n\t\tclassName={cn(alertVariants({ variant }), \"flex-row gap-3\", className)}\n\t\t{...props}\n\t>\n\t\t{children}\n\t</View>\n));\nAlert.displayName = \"Alert\";\n\nconst AlertTitle = React.forwardRef<\n\tReact.ElementRef<typeof Text>,\n\tReact.ComponentPropsWithoutRef<typeof Text>\n>(({ className, children, ...props }, ref) => (\n\t<Text\n\t\tref={ref}\n\t\tclassName={cn(\n\t\t\t\"font-semibold leading-none tracking-tight text-slate-900 dark:text-slate-50\",\n\t\t\tclassName,\n\t\t)}\n\t\t{...props}\n\t>\n\t\t{typeof children === 'string' ? (\n\t\t\t<Text>{children}</Text>\n\t\t) : (\n\t\t\tchildren\n\t\t)}\n\t</Text>\n));\nAlertTitle.displayName = \"AlertTitle\";\n\nconst AlertDescription = React.forwardRef<\n\tReact.ElementRef<typeof Text>,\n\tReact.ComponentPropsWithoutRef<typeof Text>\n>(({ className, children, ...props }, ref) => (\n\t<View className=\"flex-1\">\n\t\t<Text\n\t\t\tref={ref}\n\t\t\tclassName={cn(\n\t\t\t\t\"text-sm text-slate-600 dark:text-slate-400 leading-relaxed\",\n\t\t\t\tclassName,\n\t\t\t)}\n\t\t\t{...props}\n\t\t>\n\t\t\t{typeof children === 'string' ? (\n\t\t\t\t<Text>{children}</Text>\n\t\t\t) : (\n\t\t\t\tchildren\n\t\t\t)}\n\t\t</Text>\n\t</View>\n));\nAlertDescription.displayName = \"AlertDescription\";\n\nexport { Alert, AlertTitle, AlertDescription };\n"
+    }
+  ]
+}

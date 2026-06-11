@@ -1,0 +1,18 @@
+{
+  "name": "badge",
+  "type": "registry:ui",
+  "dependencies": [
+    "class-variance-authority"
+  ],
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "ui/badge.tsx",
+      "target": "components/ui/badge.tsx",
+      "type": "registry:ui",
+      "content": "import { cva, type VariantProps } from \"class-variance-authority\";\nimport * as React from \"react\";\nimport { Text, View } from \"react-native\";\nimport { cn } from \"{{UTILS_ALIAS}}\";\n\nconst badgeVariants = cva(\n\t\"inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors\",\n\t{\n\t\tvariants: {\n\t\t\tvariant: {\n\t\t\t\tdefault:\n\t\t\t\t\t\"border-transparent bg-primary/90 dark:bg-primary/30\",\n\t\t\t\tsecondary:\n\t\t\t\t\t\"border-transparent bg-slate-100 text-slate-900 dark:bg-slate-800 dark:text-slate-50\",\n\t\t\t\tdestructive:\n\t\t\t\t\t\"border-transparent bg-red-500 text-slate-50 dark:bg-red-900 dark:text-slate-50\",\n\t\t\t\toutline: \"text-slate-950 dark:text-slate-50 border-slate-200 dark:border-slate-800\",\n\t\t\t},\n\t\t},\n\t\tdefaultVariants: {\n\t\t\tvariant: \"default\",\n\t\t},\n\t},\n);\n\nexport interface BadgeProps\n\textends React.ComponentPropsWithoutRef<typeof View>,\n\t\tVariantProps<typeof badgeVariants> {}\n\nfunction Badge({ className, variant, children, ...props }: BadgeProps) {\n\treturn (\n\t\t<View className={cn(badgeVariants({ variant }), className)} {...props}>\n\t\t\t{typeof children === 'string' ? (\n\t\t\t\t<Text\n\t\t\t\t\tclassName={cn(\n\t\t\t\t\t\t\"text-xs font-semibold\",\n\t\t\t\t\t\tvariant === \"default\"\n\t\t\t\t\t\t\t? \"text-white\"\n\t\t\t\t\t\t\t: \"text-slate-900 dark:text-slate-50\",\n\t\t\t\t\t)}\n\t\t\t\t>\n\t\t\t\t\t{children}\n\t\t\t\t</Text>\n\t\t\t) : (\n\t\t\t\tchildren\n\t\t\t)}\n\t\t</View>\n\t);\n}\n\nexport { Badge, badgeVariants };\n"
+    }
+  ]
+}

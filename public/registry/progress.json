@@ -1,0 +1,18 @@
+{
+  "name": "progress",
+  "type": "registry:ui",
+  "dependencies": [
+    "@rn-primitives/progress"
+  ],
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "ui/progress.tsx",
+      "target": "components/ui/progress.tsx",
+      "type": "registry:ui",
+      "content": "import * as ProgressPrimitive from \"@rn-primitives/progress\";\nimport * as React from \"react\";\nimport Animated, {\n\tuseAnimatedStyle,\n\twithSpring,\n} from \"react-native-reanimated\";\nimport { cn } from \"{{UTILS_ALIAS}}\";\n\nconst Progress = React.forwardRef<\n\tReact.ElementRef<typeof ProgressPrimitive.Root>,\n\tReact.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root>\n>(({ className, value, ...props }, ref) => {\n\treturn (\n\t\t<ProgressPrimitive.Root\n\t\t\tref={ref}\n\t\t\tclassName={cn(\n\t\t\t\t\"relative h-2 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800\",\n\t\t\t\tclassName,\n\t\t\t)}\n\t\t\t{...props}\n\t\t>\n\t\t\t<Indicator value={value} />\n\t\t</ProgressPrimitive.Root>\n\t);\n});\nProgress.displayName = ProgressPrimitive.Root.displayName;\n\nfunction Indicator({ value }: { value: number | null | undefined }) {\n\tconst animatedStyle = useAnimatedStyle(() => {\n\t\treturn {\n\t\t\twidth: withSpring(`${value ?? 0}%`, { overshootClamping: true }),\n\t\t};\n\t});\n\n\treturn (\n\t\t<ProgressPrimitive.Indicator asChild>\n\t\t\t<Animated.View\n\t\t\t\tstyle={animatedStyle}\n\t\t\t\tclassName=\"h-full bg-primary\"\n\t\t\t/>\n\t\t</ProgressPrimitive.Indicator>\n\t);\n}\n\nexport { Progress };\n"
+    }
+  ]
+}

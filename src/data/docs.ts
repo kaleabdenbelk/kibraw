@@ -423,133 +423,106 @@ Then they can use your alias: \`npx kibra add mine/button\`.
 - [ ] **A11y Compliant**: Includes \`accessibilityRole\` and \`accessibilityLabel\`.
 - [ ] **Tokenized Imports**: All internal imports use \`{{UTILS_ALIAS}}\` or \`{{COMPONENTS_ALIAS}}\`.
 - [ ] **Standalone**: Components don't rely on hidden global providers.`
+  },
+  "hosting-guide": {
+    title: "Production & Hosting",
+    description: "Learn how to host and deploy your dynamic registry API and documentation site.",
+    slug: "hosting-guide",
+    content: `# 🌐 Production & Hosting
+
+Deploying your custom component registry and documentation site is incredibly simple thanks to our co-located architecture. Because your compiled registry files reside inside the \`public/registry/\` folder, hosting the documentation site on **Vercel**, **Netlify**, or **GitHub Pages** will automatically host your CLI-ready API endpoints as well!
+
+---
+
+### 🏛️ The Co-location Concept
+
+By compiling your registry directly into the public directory of your Vite frontend, you create a dual-purpose static server:
+- **Web App**: Accessible at \`https://kibra-two.vercel.app/\` (for documentation, previews, and guides).
+- **Static API**: Accessible at \`https://kibra-two.vercel.app/registry/index.json\` (for the CLI).
+
+This means you only need to manage **one single deployment** for both your docs and your CLI downloader!
+
+---
+
+### 🚀 Deploying to Vercel (Recommended)
+
+Follow these steps to host your workspace on Vercel:
+
+### 1. Push your code to GitHub
+Make sure your documentation repository (\`kibra2\`) is pushed to a remote repository on GitHub, GitLab, or Bitbucket.
+
+### 2. Connect to Vercel
+1. Log in to [Vercel](https://vercel.com) and click **"Add New"** -> **"Project"**.
+2. Import your repository.
+3. Configure the build settings:
+   - **Framework Preset**: \`Vite\`
+   - **Root Directory**: \`.\` (or \`kibra2\` if part of a monorepo)
+   - **Build Command**: \`pnpm run build\`
+   - **Output Directory**: \`dist\`
+4. Click **"Deploy"**.
+
+Once deployed, Vercel will give you a domain like \`https://kibra-two.vercel.app/\`.
+
+---
+
+### 🔌 Connecting your CLI to your Registry
+
+To make the \`kibra\` CLI fetch components from your newly hosted registry, you (and your users) can configure it in two ways:
+
+### A. Run CLI with the direct --registry flag
+Users can add components by pointing directly to your hosted registry URL:
+\`\`\`bash
+npx kibra add button --registry https://kibra-two.vercel.app/registry
+\`\`\`
+
+### B. Register a permanent custom alias
+Users can add your registry permanently inside their local \`kibra.json\` configuration:
+\`\`\`json
+{
+  "registries": {
+    "mine": "https://kibra-two.vercel.app/registry"
+  }
+}
+\`\`\`
+Then they can install any component from you using the shorthand:
+\`\`\`bash
+npx kibra add mine/button
+\`\`\`
+
+---
+
+### 📋 Registry Health Check
+Once your deployment is complete, verify that your static API endpoints are working by visiting them in your browser:
+- [ ] Index: \`https://kibra-two.vercel.app/registry/index.json\`
+- [ ] Component: \`https://kibra-two.vercel.app/registry/button.json\`
+
+If both URLs return raw JSON successfully, your custom registry is 100% active, global, and live!`
   }
 }
 
 export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
-  button: {
-    title: "Button",
-    description: "Displays a button or a component that looks like a button.",
-    slug: "button",
-    badges: ["Universal", "Accessible", "Customizable"],
-    installation: "npx kibra add button",
-    usage: `import { Button } from "@/components/ui/button"
-
-export default function Demo() {
-  return (
-    <Button variant="default" size="default" onClick={() => console.log("Clicked")}>
-      Click me
-    </Button>
-  )
-}`,
-    code: `import * as React from "react"
-import { cva, type VariantProps } from "class-variance-authority"
-import { Slot } from "radix-ui"
-
-import { cn } from "@/lib/utils"
-
-const buttonVariants = cva(
-  "group/button inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
-  {
-    variants: {
-      variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/80",
-        outline:
-          "border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50",
-        secondary:
-          "bg-secondary text-secondary-foreground hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)] aria-expanded:bg-secondary aria-expanded:text-secondary-foreground",
-        ghost:
-          "hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50",
-        destructive:
-          "bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40",
-        link: "text-primary underline-offset-4 hover:underline",
-      },
-      size: {
-        default:
-          "h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
-        xs: "h-6 gap-1 rounded-[min(var(--radius-md),10px)] px-2 text-xs in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3",
-        sm: "h-7 gap-1 rounded-[min(var(--radius-md),12px)] px-2.5 text-[0.8rem] in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3.5",
-        lg: "h-9 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
-        icon: "size-8",
-        "icon-xs":
-          "size-6 rounded-[min(var(--radius-md),10px)] in-data-[slot=button-group]:rounded-lg [&_svg:not([class*='size-'])]:size-3",
-        "icon-sm":
-          "size-7 rounded-[min(var(--radius-md),12px)] in-data-[slot=button-group]:rounded-lg",
-        "icon-lg": "size-9",
-      },
-    },
-    defaultVariants: {
-      variant: "default",
-      size: "default",
-    },
-  }
-)
-
-function Button({
-  className,
-  variant = "default",
-  size = "default",
-  asChild = false,
-  ...props
-}: React.ComponentProps<"button"> &
-  VariantProps<typeof buttonVariants> & {
-    asChild?: boolean
-  }) {
-  const Comp = asChild ? Slot.Root : "button"
-
-  return (
-    <Comp
-      data-slot="button"
-      data-variant={variant}
-      data-size={size}
-      className={cn(buttonVariants({ variant, size, className }))}
-      {...props}
-    />
-  )
-}
-
-export { Button, buttonVariants }`,
-    props: [
-      {
-        name: "variant",
-        type: '"default" | "outline" | "secondary" | "ghost" | "destructive" | "link"',
-        default: '"default"',
-        description: "The visual style variant of the button."
-      },
-      {
-        name: "size",
-        type: '"default" | "xs" | "sm" | "lg" | "icon" | "icon-xs" | "icon-sm" | "icon-lg"',
-        default: '"default"',
-        description: "The height and padding scale of the button."
-      },
-      {
-        name: "asChild",
-        type: "boolean",
-        default: "false",
-        description: "Whether to merge properties into the immediate child element."
-      }
-    ]
-  },
-  accordion: {
+  "accordion": {
     title: "Accordion",
     description: "A vertically collapsing accordion list with smooth animated transitions.",
     slug: "accordion",
-    badges: ["Universal", "Animated", "Reanimated 3.x"],
+    badges: ["Universal","Accessible","Customizable","Animated"],
     installation: "npx kibra add accordion",
-    usage: `import {
-  Accordion,
-  AccordionItem,
-  AccordionTrigger,
-  AccordionContent,
-} from "@/components/ui/accordion-native"
+    usage: `import * as React from "react"
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion"
 
 export default function Demo() {
   return (
-    <Accordion type="single" collapsible defaultValue="item-1">
+    <Accordion type="single" collapsible>
       <AccordionItem value="item-1">
+        <AccordionTrigger>Is it accessible?</AccordionTrigger>
+        <AccordionContent>
+          Yes. It adheres to the WAI-ARIA design pattern.
+        </AccordionContent>
+      </AccordionItem>
+      <AccordionItem value="item-2">
         <AccordionTrigger>Is it animated?</AccordionTrigger>
         <AccordionContent>
-          Yes! It uses react-native-reanimated transitions for smooth expansion.
+          Yes. It uses Reanimated for smooth open/close animations.
         </AccordionContent>
       </AccordionItem>
     </Accordion>
@@ -585,7 +558,7 @@ AccordionItem.displayName = "AccordionItem";
 const AccordionTrigger = React.forwardRef<
 	React.ElementRef<typeof AccordionPrimitive.Trigger>,
 	React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Trigger>
->((({ className, children, ...props }, ref) => {
+>(({ className, children, ...props }, ref) => {
 	const { isExpanded } = AccordionPrimitive.useItemContext();
 
 	const animatedStyle = useAnimatedStyle(() => {
@@ -650,42 +623,256 @@ const AccordionContent = React.forwardRef<
 ));
 AccordionContent.displayName = AccordionPrimitive.Content.displayName;
 
-export { Accordion, AccordionItem, AccordionTrigger, AccordionContent };`,
+export { Accordion, AccordionItem, AccordionTrigger, AccordionContent };
+`,
     props: [
-      {
-        name: "type",
-        type: '"single" | "multiple"',
-        default: '"single"',
-        description: "Controls whether single or multiple accordion panels can expand at once."
-      },
-      {
-        name: "collapsible",
-        type: "boolean",
-        default: "false",
-        description: "When type is 'single', controls whether an expanded panel can collapse on click."
-      },
-      {
-        name: "defaultValue",
-        type: "string | string[]",
-        default: "undefined",
-        description: "The item value(s) of the panel(s) expanded by default."
-      }
+          {
+                "name": "type",
+                "type": "\"single\" | \"multiple\"",
+                "default": "undefined",
+                "description": "Whether one or multiple items can be opened at the same time."
+          },
+          {
+                "name": "collapsible",
+                "type": "boolean",
+                "default": "false",
+                "description": "When type is 'single', allows closing the open item by pressing it again."
+          },
+          {
+                "name": "value",
+                "type": "string | string[]",
+                "default": "undefined",
+                "description": "The controlled open state of the accordion item(s)."
+          },
+          {
+                "name": "onValueChange",
+                "type": "(value: string | string[]) => void",
+                "default": "undefined",
+                "description": "Callback called when the open state of an accordion item changes."
+          },
+          {
+                "name": "className",
+                "type": "string",
+                "default": "undefined",
+                "description": "Additional NativeWind class names to apply to the accordion root."
+          }
     ]
   },
-  alert: {
-    title: "Alert",
-    description: "Displays a beautiful alert banner or callout box for notifications and errors.",
-    slug: "alert",
-    badges: ["Universal", "Accessible", "Lightweight"],
-    installation: "npx kibra add alert",
-    usage: `import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert-native"
+  "alert-dialog": {
+    title: "Alert Dialog",
+    description: "A modal dialog that interrupts the user with important content and requires an acknowledgement.",
+    slug: "alert-dialog",
+    badges: ["Universal","Accessible","Customizable","Animated"],
+    installation: "npx kibra add alert-dialog",
+    usage: `import * as React from "react"
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, AlertDialogPortal, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
+import { AlertDialog } from "@/components/ui/alertdialog"
+import { Alert } from "@/components/ui/alert"
+import { Button } from "@/components/ui/button"
 
 export default function Demo() {
   return (
-    <Alert variant="default">
+    <AlertDialog>
+      <AlertDialogTrigger>
+        <Button label="Delete Account" variant="danger" />
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This action cannot be undone. This will permanently delete your
+            account and remove your data from our servers.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction>Continue</AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  )
+}`,
+    code: `import * as AlertDialogPrimitive from "@rn-primitives/alert-dialog";
+import * as React from "react";
+import { Platform, StyleSheet, View } from "react-native";
+import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
+import { buttonVariants } from "./button";
+import { cn } from "@/lib/utils";
+
+const AlertDialog = AlertDialogPrimitive.Root;
+
+const AlertDialogTrigger = AlertDialogPrimitive.Trigger;
+
+const AlertDialogPortal = AlertDialogPrimitive.Portal;
+
+const AlertDialogOverlay = React.forwardRef<
+	React.ElementRef<typeof AlertDialogPrimitive.Overlay>,
+	React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Overlay>
+>(({ className, ...props }, ref) => (
+	<AlertDialogPrimitive.Overlay
+		style={StyleSheet.absoluteFill}
+		className={cn("z-50 bg-black/80", className)}
+		{...props}
+		ref={ref}
+		asChild
+	>
+		<Animated.View entering={FadeIn} exiting={FadeOut} />
+	</AlertDialogPrimitive.Overlay>
+));
+AlertDialogOverlay.displayName = AlertDialogPrimitive.Overlay.displayName;
+
+const AlertDialogContent = React.forwardRef<
+	React.ElementRef<typeof AlertDialogPrimitive.Content>,
+	React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Content>
+>(({ className, ...props }, ref) => (
+	<AlertDialogPortal>
+		<AlertDialogOverlay />
+		<AlertDialogPrimitive.Content
+			ref={ref}
+			className={cn(
+				"fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-white p-6 shadow-lg sm:rounded-lg dark:bg-slate-950 dark:border-slate-800",
+				className,
+			)}
+			{...props}
+		/>
+	</AlertDialogPortal>
+));
+AlertDialogContent.displayName = AlertDialogPrimitive.Content.displayName;
+
+const AlertDialogHeader = ({
+	className,
+	...props
+}: React.ComponentPropsWithoutRef<typeof View>) => (
+	<View
+		className={cn(
+			"flex flex-col space-y-2 text-center sm:text-left",
+			className,
+		)}
+		{...props}
+	/>
+);
+AlertDialogHeader.displayName = "AlertDialogHeader";
+
+const AlertDialogFooter = ({
+	className,
+	...props
+}: React.ComponentPropsWithoutRef<typeof View>) => (
+	<View
+		className={cn(
+			"flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2",
+			className,
+		)}
+		{...props}
+	/>
+);
+AlertDialogFooter.displayName = "AlertDialogFooter";
+
+const AlertDialogTitle = React.forwardRef<
+	React.ElementRef<typeof AlertDialogPrimitive.Title>,
+	React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Title>
+>(({ className, ...props }, ref) => (
+	<AlertDialogPrimitive.Title
+		ref={ref}
+		className={cn(
+			"text-lg font-semibold text-slate-900 dark:text-slate-50",
+			className,
+		)}
+		{...props}
+	/>
+));
+AlertDialogTitle.displayName = AlertDialogPrimitive.Title.displayName;
+
+const AlertDialogDescription = React.forwardRef<
+	React.ElementRef<typeof AlertDialogPrimitive.Description>,
+	React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Description>
+>(({ className, ...props }, ref) => (
+	<AlertDialogPrimitive.Description
+		ref={ref}
+		className={cn("text-sm text-slate-500 dark:text-slate-400", className)}
+		{...props}
+	/>
+));
+AlertDialogDescription.displayName =
+	AlertDialogPrimitive.Description.displayName;
+
+const AlertDialogAction = React.forwardRef<
+	React.ElementRef<typeof AlertDialogPrimitive.Action>,
+	React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Action>
+>(({ className, ...props }, ref) => (
+	<AlertDialogPrimitive.Action
+		ref={ref}
+		className={cn(buttonVariants(), className)}
+		{...props}
+	/>
+));
+AlertDialogAction.displayName = AlertDialogPrimitive.Action.displayName;
+
+const AlertDialogCancel = React.forwardRef<
+	React.ElementRef<typeof AlertDialogPrimitive.Cancel>,
+	React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Cancel>
+>(({ className, ...props }, ref) => (
+	<AlertDialogPrimitive.Cancel
+		ref={ref}
+		className={cn(
+			buttonVariants({ variant: "outline" }),
+			"mt-2 sm:mt-0",
+			className,
+		)}
+		{...props}
+	/>
+));
+AlertDialogCancel.displayName = AlertDialogPrimitive.Cancel.displayName;
+
+export {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogOverlay,
+	AlertDialogPortal,
+	AlertDialogTitle,
+	AlertDialogTrigger,
+};
+`,
+    props: [
+          {
+                "name": "open",
+                "type": "boolean",
+                "default": "undefined",
+                "description": "The controlled open state of the dialog."
+          },
+          {
+                "name": "onOpenChange",
+                "type": "(open: boolean) => void",
+                "default": "undefined",
+                "description": "Callback called when the open state changes."
+          },
+          {
+                "name": "className",
+                "type": "string",
+                "default": "undefined",
+                "description": "Additional NativeWind class names for AlertDialogContent."
+          }
+    ]
+  },
+  "alert": {
+    title: "Alert",
+    description: "Displays a beautiful alert banner or callout box for notifications and errors.",
+    slug: "alert",
+    badges: ["Universal","Accessible","Customizable"],
+    installation: "npx kibra add alert",
+    usage: `import * as React from "react"
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert"
+
+export default function Demo() {
+  return (
+    <Alert variant="destructive">
+      <AlertTitle>Error</AlertTitle>
       <AlertDescription>
-        <AlertTitle>Heads up!</AlertTitle>
-        You can build responsive universal web & mobile apps with Kibra.
+        Your session has expired. Please sign in again.
       </AlertDescription>
     </Alert>
   )
@@ -770,14 +957,2750 @@ const AlertDescription = React.forwardRef<
 ));
 AlertDescription.displayName = "AlertDescription";
 
-export { Alert, AlertTitle, AlertDescription };`,
+export { Alert, AlertTitle, AlertDescription };
+`,
     props: [
-      {
-        name: "variant",
-        type: '"default" | "destructive"',
-        default: '"default"',
-        description: "The visual style and color coding of the alert callout."
-      }
+          {
+                "name": "variant",
+                "type": "\"default\" | \"destructive\"",
+                "default": "\"default\"",
+                "description": "The visual style of the alert."
+          },
+          {
+                "name": "className",
+                "type": "string",
+                "default": "undefined",
+                "description": "Additional NativeWind class names."
+          },
+          {
+                "name": "children",
+                "type": "React.ReactNode",
+                "default": "undefined",
+                "description": "Content of the alert. Use AlertTitle and AlertDescription."
+          }
     ]
-  }
+  },
+  "aspect-ratio": {
+    title: "Aspect Ratio",
+    description: "Displays content within a desired, fixed aspect ratio across platforms.",
+    slug: "aspect-ratio",
+    badges: ["Universal","Accessible","Customizable"],
+    installation: "npx kibra add aspect-ratio",
+    usage: `import * as React from "react"
+import { AspectRatio } from "@/components/ui/aspect-ratio"
+import { AspectRatio } from "@/components/ui/aspectratio"
+
+export default function Demo() {
+  return (
+    <AspectRatio ratio={16 / 9} style={{ width: '100%' }}>
+      <Image
+        source={{ uri: 'https://images.unsplash.com/photo-1588345921523-c2dcdb7f1dcd' }}
+        style={{ width: '100%', height: '100%', borderRadius: 8 }}
+        resizeMode="cover"
+      />
+    </AspectRatio>
+  )
+}`,
+    code: `import * as AspectRatioPrimitive from "@rn-primitives/aspect-ratio";
+
+const AspectRatio = AspectRatioPrimitive.Root;
+
+export { AspectRatio };
+`,
+    props: [
+          {
+                "name": "ratio",
+                "type": "number",
+                "default": "1",
+                "description": "The desired aspect ratio (width / height). e.g. 16/9, 4/3, 1."
+          },
+          {
+                "name": "style",
+                "type": "ViewStyle",
+                "default": "undefined",
+                "description": "Additional styles to apply to the container."
+          }
+    ]
+  },
+  "avatar": {
+    title: "Avatar",
+    description: "An image element with a fallback for representing user profiles.",
+    slug: "avatar",
+    badges: ["Universal","Accessible","Customizable"],
+    installation: "npx kibra add avatar",
+    usage: `import * as React from "react"
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
+
+export default function Demo() {
+  return (
+    <Avatar>
+      <AvatarImage src="https://github.com/shadcn.png" />
+      <AvatarFallback>CN</AvatarFallback>
+    </Avatar>
+  )
+}`,
+    code: `import * as AvatarPrimitive from "@rn-primitives/avatar";
+import { Image } from "expo-image";
+import * as React from "react";
+import { Text, View } from "react-native";
+import { cn } from "@/lib/utils";
+
+const Avatar = React.forwardRef<
+	React.ElementRef<typeof AvatarPrimitive.Root>,
+	React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Root>
+>(({ className, ...props }, ref) => (
+	<AvatarPrimitive.Root
+		ref={ref}
+		className={cn(
+			"relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full",
+			className,
+		)}
+		{...props}
+	/>
+));
+Avatar.displayName = AvatarPrimitive.Root.displayName;
+
+const AvatarImage = React.forwardRef<
+	React.ElementRef<typeof AvatarPrimitive.Image>,
+	React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Image>
+>(({ className, ...props }, ref) => (
+	<AvatarPrimitive.Image
+		ref={ref}
+		asChild
+		className={cn("aspect-square h-full w-full", className)}
+		source={props.source || { uri: props.src }}
+		{...props}
+	>
+		<Image
+			source={props.source || { uri: props.src } as any}
+			contentFit="cover"
+			transition={200}
+			style={{ width: "100%", height: "100%" }}
+		/>
+	</AvatarPrimitive.Image>
+));
+AvatarImage.displayName = AvatarPrimitive.Image.displayName;
+
+const AvatarFallback = React.forwardRef<
+	React.ElementRef<typeof AvatarPrimitive.Fallback>,
+	React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Fallback>
+>(({ className, children, ...props }, ref) => (
+	<AvatarPrimitive.Fallback
+		ref={ref}
+		className={cn(
+			"flex h-full w-full items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800",
+			className,
+		)}
+		{...props}
+	>
+		{typeof children === 'string' ? (
+			<Text className="text-xs font-medium text-slate-900 dark:text-slate-50">
+				{children}
+			</Text>
+		) : (
+			children
+		)}
+	</AvatarPrimitive.Fallback>
+));
+AvatarFallback.displayName = AvatarPrimitive.Fallback.displayName;
+
+export { Avatar, AvatarImage, AvatarFallback };
+`,
+    props: [
+          {
+                "name": "className",
+                "type": "string",
+                "default": "undefined",
+                "description": "Additional NativeWind class names for the avatar root (controls size)."
+          },
+          {
+                "name": "src",
+                "type": "string",
+                "default": "undefined",
+                "description": "URL of the avatar image. Passed to AvatarImage."
+          },
+          {
+                "name": "source",
+                "type": "ImageSourcePropType",
+                "default": "undefined",
+                "description": "React Native image source object. Passed to AvatarImage."
+          }
+    ]
+  },
+  "badge": {
+    title: "Badge",
+    description: "Displays a small badge or label for tags, counts, or status indicators.",
+    slug: "badge",
+    badges: ["Universal","Accessible","Customizable"],
+    installation: "npx kibra add badge",
+    usage: `import * as React from "react"
+import { View } from "react-native"
+import { Badge } from "@/components/ui/badge"
+
+export default function Demo() {
+  return (
+    <View className="flex-row gap-2">
+      <Badge>New</Badge>
+      <Badge variant="secondary">Beta</Badge>
+      <Badge variant="destructive">Error</Badge>
+      <Badge variant="outline">Outline</Badge>
+    </View>
+  )
+}`,
+    code: `import { cva, type VariantProps } from "class-variance-authority";
+import * as React from "react";
+import { Text, View } from "react-native";
+import { cn } from "@/lib/utils";
+
+const badgeVariants = cva(
+	"inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors",
+	{
+		variants: {
+			variant: {
+				default:
+					"border-transparent bg-primary/90 dark:bg-primary/30",
+				secondary:
+					"border-transparent bg-slate-100 text-slate-900 dark:bg-slate-800 dark:text-slate-50",
+				destructive:
+					"border-transparent bg-red-500 text-slate-50 dark:bg-red-900 dark:text-slate-50",
+				outline: "text-slate-950 dark:text-slate-50 border-slate-200 dark:border-slate-800",
+			},
+		},
+		defaultVariants: {
+			variant: "default",
+		},
+	},
+);
+
+export interface BadgeProps
+	extends React.ComponentPropsWithoutRef<typeof View>,
+		VariantProps<typeof badgeVariants> {}
+
+function Badge({ className, variant, children, ...props }: BadgeProps) {
+	return (
+		<View className={cn(badgeVariants({ variant }), className)} {...props}>
+			{typeof children === 'string' ? (
+				<Text
+					className={cn(
+						"text-xs font-semibold",
+						variant === "default"
+							? "text-white"
+							: "text-slate-900 dark:text-slate-50",
+					)}
+				>
+					{children}
+				</Text>
+			) : (
+				children
+			)}
+		</View>
+	);
 }
+
+export { Badge, badgeVariants };
+`,
+    props: [
+          {
+                "name": "variant",
+                "type": "\"default\" | \"secondary\" | \"destructive\" | \"outline\"",
+                "default": "\"default\"",
+                "description": "The visual style of the badge."
+          },
+          {
+                "name": "className",
+                "type": "string",
+                "default": "undefined",
+                "description": "Additional NativeWind class names."
+          },
+          {
+                "name": "children",
+                "type": "React.ReactNode",
+                "default": "undefined",
+                "description": "The label text or content inside the badge."
+          }
+    ]
+  },
+  "button.stories": {
+    title: "Button.stories",
+    description: "Displays a beautiful Button.stories component.",
+    slug: "button.stories",
+    badges: ["Universal","Accessible","Customizable"],
+    installation: "npx kibra add button.stories",
+    usage: `import * as React from "react"
+import { Button.stories } from "@/components/ui/button.stories"
+
+export default function Demo() {
+  return (
+    
+  )
+}`,
+    code: `import React from "react";
+import { View } from "react-native";
+import { Button } from "./button";
+
+export default {
+	title: "Components/Button",
+	component: Button,
+};
+
+export const Default = () => (
+	<View style={{ padding: 20 }}>
+		<Button label="Default Button" />
+	</View>
+);
+
+export const Secondary = () => (
+	<View style={{ padding: 20 }}>
+		<Button variant="secondary" label="Secondary Button" />
+	</View>
+);
+`,
+    props: []
+  },
+  "button": {
+    title: "Button",
+    description: "Displays a button or a component that looks like a button.",
+    slug: "button",
+    badges: ["Universal","Accessible","Customizable"],
+    installation: "npx kibra add button",
+    usage: `import * as React from "react"
+import { View } from "react-native"
+import { Button } from "@/components/ui/button"
+
+export default function Demo() {
+  return (
+    <View className="flex-col gap-3">
+      <Button label="Default" />
+      <Button label="Secondary" variant="secondary" />
+      <Button label="Outline" variant="outline" />
+      <Button label="Danger" variant="danger" />
+      <Button label="Loading…" loading />
+    </View>
+  )
+}`,
+    code: `import { cn } from "@/lib/utils";
+import { cva, type VariantProps } from "class-variance-authority";
+import type React from "react";
+import { ActivityIndicator, Pressable, Text } from "react-native";
+
+const buttonVariants = cva(
+	"flex-row items-center justify-center rounded-md px-4 py-2 active:opacity-80",
+	{
+		variants: {
+			variant: {
+				default: "bg-primary",
+				secondary: "bg-slate-100 dark:bg-slate-800",
+				outline: "border border-slate-200 bg-transparent dark:border-slate-700",
+				ghost: "bg-transparent",
+				danger: "bg-red-500",
+			},
+			size: {
+				default: "h-10 px-4 py-2",
+				sm: "h-9 rounded-md px-3",
+				lg: "h-11 rounded-md px-8",
+				icon: "h-10 w-10",
+			},
+		},
+		defaultVariants: {
+			variant: "default",
+			size: "default",
+		},
+	},
+);
+
+interface ButtonProps
+	extends React.ComponentPropsWithoutRef<typeof Pressable>,
+		VariantProps<typeof buttonVariants> {
+	label?: string;
+	labelClasses?: string;
+	loading?: boolean;
+	className?: string;
+	children?: React.ReactNode;
+}
+
+function Button({
+	className,
+	variant,
+	size,
+	label,
+	labelClasses,
+	loading,
+	children,
+	...props
+}: ButtonProps) {
+	return (
+		<Pressable
+			className={cn(buttonVariants({ variant, size, className }))}
+			accessibilityRole="button"
+			accessibilityState={{
+				disabled: !!props.disabled || !!loading,
+				busy: !!loading,
+			}}
+			accessibilityLabel={props.accessibilityLabel || label}
+			{...props}
+		>
+			{loading ? (
+				<ActivityIndicator
+					color={variant === "default" ? "white" : "black"}
+					accessibilityLabel="Loading"
+				/>
+			) : (
+				<>
+					{label && (
+						<Text
+							className={cn(
+								"text-sm font-medium",
+								variant === "default"
+									? "text-white"
+									: "text-black dark:text-white",
+								labelClasses,
+							)}
+						>
+							{label}
+						</Text>
+					)}
+					{typeof children === 'string' ? (
+						<Text
+							className={cn(
+								"text-sm font-medium",
+								variant === "default"
+									? "text-white"
+									: "text-black dark:text-white",
+								labelClasses,
+							)}
+						>
+							{children}
+						</Text>
+					) : (
+						children
+					)}
+				</>
+			)}
+		</Pressable>
+	);
+}
+
+export { Button, buttonVariants };
+`,
+    props: [
+          {
+                "name": "variant",
+                "type": "\"default\" | \"secondary\" | \"outline\" | \"ghost\" | \"danger\"",
+                "default": "\"default\"",
+                "description": "The visual style of the button."
+          },
+          {
+                "name": "size",
+                "type": "\"default\" | \"sm\" | \"lg\" | \"icon\"",
+                "default": "\"default\"",
+                "description": "The size of the button."
+          },
+          {
+                "name": "label",
+                "type": "string",
+                "default": "undefined",
+                "description": "Text label to display inside the button."
+          },
+          {
+                "name": "labelClasses",
+                "type": "string",
+                "default": "undefined",
+                "description": "Additional NativeWind class names for the label Text component."
+          },
+          {
+                "name": "loading",
+                "type": "boolean",
+                "default": "false",
+                "description": "When true, displays an ActivityIndicator and disables interaction."
+          },
+          {
+                "name": "className",
+                "type": "string",
+                "default": "undefined",
+                "description": "Additional NativeWind class names for the Pressable root."
+          },
+          {
+                "name": "children",
+                "type": "React.ReactNode",
+                "default": "undefined",
+                "description": "Custom children rendered inside the button instead of the label."
+          },
+          {
+                "name": "disabled",
+                "type": "boolean",
+                "default": "false",
+                "description": "Disables the button when true."
+          },
+          {
+                "name": "onPress",
+                "type": "() => void",
+                "default": "undefined",
+                "description": "Callback invoked when the button is pressed."
+          }
+    ]
+  },
+  "card": {
+    title: "Card",
+    description: "Displays a card with header, content, and footer sections.",
+    slug: "card",
+    badges: ["Universal","Accessible","Customizable"],
+    installation: "npx kibra add card",
+    usage: `import * as React from "react"
+import { Text } from "react-native"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+
+export default function Demo() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Notifications</CardTitle>
+        <CardDescription>You have 3 unread messages.</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Text className="text-sm text-slate-600 dark:text-slate-400">
+          Your trial period ends in 7 days.
+        </Text>
+      </CardContent>
+      <CardFooter>
+        <Button label="View all" variant="outline" />
+      </CardFooter>
+    </Card>
+  )
+}`,
+    code: `import { cn } from "@/lib/utils";
+import type React from "react";
+import { Text, View } from "react-native";
+
+function Card({
+	className,
+	...props
+}: React.ComponentPropsWithoutRef<typeof View>) {
+	return (
+		<View
+			className={cn(
+				"rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-950",
+				className,
+			)}
+			{...props}
+		/>
+	);
+}
+
+function CardHeader({
+	className,
+	...props
+}: React.ComponentPropsWithoutRef<typeof View>) {
+	return (
+		<View
+			className={cn("flex flex-col space-y-1.5 pb-4", className)}
+			accessibilityRole="header"
+			{...props}
+		/>
+	);
+}
+
+function CardTitle({
+	className,
+	...props
+}: React.ComponentPropsWithoutRef<typeof Text>) {
+	return (
+		<Text
+			className={cn(
+				"text-xl font-semibold leading-none tracking-tight text-slate-900 dark:text-slate-50",
+				className,
+			)}
+			accessibilityRole="header"
+			{...props}
+		/>
+	);
+}
+
+function CardDescription({
+	className,
+	...props
+}: React.ComponentPropsWithoutRef<typeof Text>) {
+	return (
+		<Text
+			className={cn("text-sm text-slate-500 dark:text-slate-400", className)}
+			{...props}
+		/>
+	);
+}
+
+function CardContent({
+	className,
+	...props
+}: React.ComponentPropsWithoutRef<typeof View>) {
+	return <View className={cn("pt-0", className)} {...props} />;
+}
+
+function CardFooter({
+	className,
+	...props
+}: React.ComponentPropsWithoutRef<typeof View>) {
+	return (
+		<View
+			className={cn("flex flex-row items-center pt-4", className)}
+			{...props}
+		/>
+	);
+}
+
+export {
+	Card,
+	CardContent,
+	CardDescription,
+	CardFooter,
+	CardHeader,
+	CardTitle,
+};
+`,
+    props: [
+          {
+                "name": "className",
+                "type": "string",
+                "default": "undefined",
+                "description": "Additional NativeWind class names for the card container."
+          },
+          {
+                "name": "children",
+                "type": "React.ReactNode",
+                "default": "undefined",
+                "description": "Card content. Use CardHeader, CardContent, and CardFooter."
+          }
+    ]
+  },
+  "checkbox": {
+    title: "Checkbox",
+    description: "A control that allows the user to toggle between checked and unchecked states.",
+    slug: "checkbox",
+    badges: ["Universal","Accessible","Customizable"],
+    installation: "npx kibra add checkbox",
+    usage: `import * as React from "react"
+import { View } from "react-native"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Label } from "@/components/ui/label"
+
+export default function Demo() {
+  const [checked, setChecked] = React.useState(false);
+  
+  return (
+    <View className="flex-row items-center gap-2">
+      <Checkbox
+        checked={checked}
+        onCheckedChange={setChecked}
+      />
+      <Label>Accept terms and conditions</Label>
+    </View>
+  );
+}`,
+    code: `import * as CheckboxPrimitive from "@rn-primitives/checkbox";
+import { Check } from "lucide-react-native";
+import * as React from "react";
+import { cn } from "@/lib/utils";
+
+const Checkbox = React.forwardRef<
+	React.ElementRef<typeof CheckboxPrimitive.Root>,
+	React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>
+>(({ className, ...props }, ref) => (
+	<CheckboxPrimitive.Root
+		ref={ref}
+		className={cn(
+			"peer h-5 w-5 shrink-0 rounded-sm border border-primary shadow-sm items-center justify-center",
+			props.checked ? "bg-primary" : "bg-transparent",
+			className,
+		)}
+		{...props}
+	>
+		<CheckboxPrimitive.Indicator
+			className={cn("items-center justify-center")}
+		>
+			<Check
+				size={14}
+				strokeWidth={3}
+				className="text-white"
+			/>
+		</CheckboxPrimitive.Indicator>
+	</CheckboxPrimitive.Root>
+));
+Checkbox.displayName = CheckboxPrimitive.Root.displayName;
+
+export { Checkbox };
+`,
+    props: [
+          {
+                "name": "checked",
+                "type": "boolean",
+                "default": "undefined",
+                "description": "The controlled checked state of the checkbox."
+          },
+          {
+                "name": "onCheckedChange",
+                "type": "(checked: boolean) => void",
+                "default": "undefined",
+                "description": "Callback called when the checked state changes."
+          },
+          {
+                "name": "disabled",
+                "type": "boolean",
+                "default": "false",
+                "description": "Disables the checkbox when true."
+          },
+          {
+                "name": "className",
+                "type": "string",
+                "default": "undefined",
+                "description": "Additional NativeWind class names."
+          }
+    ]
+  },
+  "dialog": {
+    title: "Dialog",
+    description: "A modal window overlaying the primary window, forcing user interaction.",
+    slug: "dialog",
+    badges: ["Universal","Accessible","Customizable","Animated"],
+    installation: "npx kibra add dialog",
+    usage: `import * as React from "react"
+import { Dialog, DialogPortal, DialogOverlay, DialogClose, DialogTrigger, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription } from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+
+export default function Demo() {
+  return (
+    <Dialog>
+      <DialogTrigger>
+        <Button label="Edit Profile" variant="outline" />
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Edit profile</DialogTitle>
+          <DialogDescription>
+            Make changes to your profile here. Click save when done.
+          </DialogDescription>
+        </DialogHeader>
+        <Input label="Name" placeholder="Pedro Duarte" />
+        <Input label="Username" placeholder="@peduarte" />
+        <DialogFooter>
+          <Button label="Save changes" />
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  )
+}`,
+    code: `import * as DialogPrimitive from "@rn-primitives/dialog";
+import { X } from "lucide-react-native";
+import * as React from "react";
+import { Platform, StyleSheet, View, Text } from "react-native";
+import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
+import { cn } from "@/lib/utils";
+
+const Dialog = DialogPrimitive.Root;
+const DialogTrigger = DialogPrimitive.Trigger;
+const DialogPortal = DialogPrimitive.Portal;
+const DialogClose = DialogPrimitive.Close;
+
+const DialogOverlay = React.forwardRef<
+	React.ElementRef<typeof DialogPrimitive.Overlay>,
+	React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
+>(({ className, ...props }, ref) => (
+	<DialogPrimitive.Overlay
+		ref={ref}
+		className={cn(
+			"absolute inset-0 z-50 bg-black/80",
+			className,
+		)}
+		{...props}
+	>
+		<Animated.View
+			entering={FadeIn}
+			exiting={FadeOut}
+			style={StyleSheet.absoluteFill}
+			className="bg-black/80"
+		/>
+	</DialogPrimitive.Overlay>
+));
+DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
+
+const DialogContent = React.forwardRef<
+	React.ElementRef<typeof DialogPrimitive.Content>,
+	React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
+>(({ className, children, ...props }, ref) => (
+	<DialogPortal>
+		<DialogOverlay />
+		<DialogPrimitive.Content
+			ref={ref}
+			className={cn(
+				"fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border border-slate-200 bg-white p-6 shadow-lg duration-200 dark:border-slate-800 dark:bg-slate-950 sm:rounded-lg",
+				className,
+			)}
+			{...props}
+		>
+			{children}
+			<DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-white transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 disabled:pointer-events-none dark:ring-offset-slate-950 dark:focus:ring-slate-300">
+				<X size={16} className="text-slate-500" />
+			</DialogPrimitive.Close>
+		</DialogPrimitive.Content>
+	</DialogPortal>
+));
+DialogContent.displayName = DialogPrimitive.Content.displayName;
+
+const DialogHeader = ({
+	className,
+	...props
+}: React.ComponentPropsWithoutRef<typeof View>) => (
+	<View
+		className={cn(
+			"flex flex-col space-y-1.5 text-center sm:text-left",
+			className,
+		)}
+		{...props}
+	/>
+);
+DialogHeader.displayName = "DialogHeader";
+
+const DialogFooter = ({
+	className,
+	...props
+}: React.ComponentPropsWithoutRef<typeof View>) => (
+	<View
+		className={cn(
+			"flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2",
+			className,
+		)}
+		{...props}
+	/>
+);
+DialogFooter.displayName = "DialogFooter";
+
+const DialogTitle = React.forwardRef<
+	React.ElementRef<typeof DialogPrimitive.Title>,
+	React.ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
+>(({ className, children, ...props }, ref) => (
+	<DialogPrimitive.Title
+		ref={ref}
+		className={cn(
+			"text-lg font-semibold leading-none tracking-tight text-slate-950 dark:text-slate-50",
+			className,
+		)}
+		{...props}
+	>
+    {typeof children === 'string' ? <Text>{children}</Text> : children}
+  </DialogPrimitive.Title>
+));
+DialogTitle.displayName = DialogPrimitive.Title.displayName;
+
+const DialogDescription = React.forwardRef<
+	React.ElementRef<typeof DialogPrimitive.Description>,
+	React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description>
+>(({ className, children, ...props }, ref) => (
+	<DialogPrimitive.Description
+		ref={ref}
+		className={cn("text-sm text-slate-500 dark:text-slate-400", className)}
+		{...props}
+	>
+    {typeof children === 'string' ? <Text>{children}</Text> : children}
+  </DialogPrimitive.Description>
+));
+DialogDescription.displayName = DialogPrimitive.Description.displayName;
+
+export {
+	Dialog,
+	DialogPortal,
+	DialogOverlay,
+	DialogClose,
+	DialogTrigger,
+	DialogContent,
+	DialogHeader,
+	DialogFooter,
+	DialogTitle,
+	DialogDescription,
+};
+`,
+    props: [
+          {
+                "name": "open",
+                "type": "boolean",
+                "default": "undefined",
+                "description": "The controlled open state of the dialog."
+          },
+          {
+                "name": "onOpenChange",
+                "type": "(open: boolean) => void",
+                "default": "undefined",
+                "description": "Callback called when the open state changes."
+          },
+          {
+                "name": "className",
+                "type": "string",
+                "default": "undefined",
+                "description": "Additional NativeWind class names for DialogContent."
+          }
+    ]
+  },
+  "drawer": {
+    title: "Drawer",
+    description: "A drawer component that slides out from the bottom or side of the screen.",
+    slug: "drawer",
+    badges: ["Universal","Accessible","Customizable","Animated"],
+    installation: "npx kibra add drawer",
+    usage: `import * as React from "react"
+import { View, Text } from "react-native"
+import { Drawer, DrawerTrigger, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, DrawerFooter } from "@/components/ui/drawer"
+import { Button } from "@/components/ui/button"
+
+export default function Demo() {
+  return (
+    <Drawer>
+      <DrawerTrigger asChild>
+        <Button label="Open Drawer" />
+      </DrawerTrigger>
+      <DrawerContent>
+        <DrawerHeader>
+          <DrawerTitle>Move Goal</DrawerTitle>
+          <DrawerDescription>
+            Set your daily activity goal.
+          </DrawerDescription>
+        </DrawerHeader>
+        <View className="py-4">
+          <Text className="text-center text-4xl font-bold">350</Text>
+        </View>
+        <DrawerFooter>
+          <Button label="Submit" />
+        </DrawerFooter>
+      </DrawerContent>
+    </Drawer>
+  )
+}`,
+    code: `import * as React from "react";
+import { StyleSheet, View, Text } from "react-native";
+import Animated, {
+	FadeIn,
+	FadeOut,
+	SlideInDown,
+	SlideOutDown,
+} from "react-native-reanimated";
+import { cn } from "@/lib/utils";
+
+// A simple universal Drawer implementation using Reanimated
+// In the future, this can be swapped with a more complex primitive if needed
+
+const DrawerContext = React.createContext<{
+	open: boolean;
+	setOpen: (open: boolean) => void;
+}>({
+	open: false,
+	setOpen: () => {},
+});
+
+const Drawer = ({
+	children,
+	open: controlledOpen,
+	onOpenChange,
+}: {
+	children: React.ReactNode;
+	open?: boolean;
+	onOpenChange?: (open: boolean) => void;
+}) => {
+	const [internalOpen, setInternalOpen] = React.useState(false);
+	const open = controlledOpen !== undefined ? controlledOpen : internalOpen;
+	const setOpen = onOpenChange || setInternalOpen;
+
+	return (
+		<DrawerContext.Provider value={{ open, setOpen }}>
+			{children}
+		</DrawerContext.Provider>
+	);
+};
+
+const DrawerTrigger = ({
+	asChild,
+	children,
+	...props
+}: {
+	asChild?: boolean;
+	children: React.ReactNode;
+}) => {
+	const { setOpen } = React.useContext(DrawerContext);
+
+	if (asChild && React.isValidElement(children)) {
+		return React.cloneElement(children as React.ReactElement<any>, {
+			onPress: () => setOpen(true),
+			...props,
+		});
+	}
+
+	return (
+		<View {...props} onTouchEnd={() => setOpen(true)}>
+			{children}
+		</View>
+	);
+};
+
+const DrawerContent = ({
+	children,
+	className,
+}: {
+	children: React.ReactNode;
+	className?: string;
+}) => {
+	const { open, setOpen } = React.useContext(DrawerContext);
+
+	if (!open) return null;
+
+	return (
+		<View style={StyleSheet.absoluteFill} className="z-50">
+			<Animated.View
+				entering={FadeIn}
+				exiting={FadeOut}
+				className="absolute inset-0 bg-black/40"
+				onTouchEnd={() => setOpen(false)}
+			/>
+			<Animated.View
+				entering={SlideInDown}
+				exiting={SlideOutDown}
+				className={cn(
+					"absolute bottom-0 left-0 right-0 bg-white dark:bg-slate-900 p-6 rounded-t-3xl min-h-[300px]",
+					className,
+				)}
+			>
+				<View className="w-12 h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full mx-auto mb-6" />
+				{children}
+			</Animated.View>
+		</View>
+	);
+};
+
+const DrawerHeader = ({
+	className,
+	children,
+}: {
+	className?: string;
+	children: React.ReactNode;
+}) => (
+	<View className={cn("mb-4 space-y-2", className)}>
+		{typeof children === 'string' ? <Text>{children}</Text> : children}
+	</View>
+);
+
+const DrawerTitle = ({
+	className,
+	children,
+}: {
+	className?: string;
+	children: React.ReactNode;
+}) => (
+	<Text
+		className={cn(
+			"text-xl font-semibold text-slate-900 dark:text-slate-50",
+			className,
+		)}
+	>
+		{typeof children === 'string' ? <Text>{children}</Text> : children}
+	</Text>
+);
+
+const DrawerDescription = ({
+	className,
+	children,
+}: {
+	className?: string;
+	children: React.ReactNode;
+}) => (
+	<Text className={cn("text-sm text-slate-500 dark:text-slate-400", className)}>
+		{typeof children === 'string' ? <Text>{children}</Text> : children}
+	</Text>
+);
+
+const DrawerFooter = ({
+	className,
+	children,
+}: {
+	className?: string;
+	children: React.ReactNode;
+}) => <View className={cn("mt-auto pt-4 space-y-2", className)}>{children}</View>;
+
+export {
+	Drawer,
+	DrawerTrigger,
+	DrawerContent,
+	DrawerHeader,
+	DrawerTitle,
+	DrawerDescription,
+	DrawerFooter,
+};
+`,
+    props: [
+          {
+                "name": "open",
+                "type": "boolean",
+                "default": "undefined",
+                "description": "The controlled open state of the drawer."
+          },
+          {
+                "name": "onOpenChange",
+                "type": "(open: boolean) => void",
+                "default": "undefined",
+                "description": "Callback called when the open state changes."
+          },
+          {
+                "name": "children",
+                "type": "React.ReactNode",
+                "default": "undefined",
+                "description": "Use DrawerTrigger and DrawerContent as direct children."
+          }
+    ]
+  },
+  "dropdown-menu": {
+    title: "Dropdown Menu",
+    description: "Displays a list of actions or options to the user, triggered by a button.",
+    slug: "dropdown-menu",
+    badges: ["Universal","Accessible","Customizable","Animated"],
+    installation: "npx kibra add dropdown-menu",
+    usage: `import * as React from "react"
+import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuPortal, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { Button } from "@/components/ui/button"
+import { DropdownMenu } from "@/components/ui/dropdownmenu"
+
+export default function Demo() {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger>
+        <Button label="Open" variant="outline" />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuItem>
+          <DropdownMenuPrimitive.Text>Profile</DropdownMenuPrimitive.Text>
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <DropdownMenuPrimitive.Text>Billing</DropdownMenuPrimitive.Text>
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <DropdownMenuPrimitive.Text>Settings</DropdownMenuPrimitive.Text>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem>
+          <DropdownMenuPrimitive.Text>Sign out</DropdownMenuPrimitive.Text>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
+}`,
+    code: `import * as DropdownMenuPrimitive from "@rn-primitives/dropdown-menu";
+import { Check, ChevronRight, Circle } from "lucide-react-native";
+import * as React from "react";
+import { StyleSheet, View } from "react-native";
+import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
+import { cn } from "@/lib/utils";
+
+const DropdownMenu = DropdownMenuPrimitive.Root;
+
+const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
+
+const DropdownMenuGroup = DropdownMenuPrimitive.Group;
+
+const DropdownMenuPortal = DropdownMenuPrimitive.Portal;
+
+const DropdownMenuSub = DropdownMenuPrimitive.Sub;
+
+const DropdownMenuRadioGroup = DropdownMenuPrimitive.RadioGroup;
+
+const DropdownMenuSubTrigger = React.forwardRef<
+	React.ElementRef<typeof DropdownMenuPrimitive.SubTrigger>,
+	React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.SubTrigger> & {
+		inset?: boolean;
+	}
+>(({ className, inset, children, ...props }, ref) => (
+	<DropdownMenuPrimitive.SubTrigger
+		ref={ref}
+		className={cn(
+			"flex-row items-center gap-2 rounded-sm px-2 py-1.5",
+			inset && "pl-8",
+			className,
+		)}
+		{...props}
+	>
+		<DropdownMenuPrimitive.Text className="text-sm text-slate-900 dark:text-slate-50">
+			{children as string}
+		</DropdownMenuPrimitive.Text>
+		<ChevronRight size={14} className="ml-auto text-slate-500" />
+	</DropdownMenuPrimitive.SubTrigger>
+));
+DropdownMenuSubTrigger.displayName =
+	DropdownMenuPrimitive.SubTrigger.displayName;
+
+const DropdownMenuSubContent = React.forwardRef<
+	React.ElementRef<typeof DropdownMenuPrimitive.SubContent>,
+	React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.SubContent>
+>(({ className, ...props }, ref) => (
+	<DropdownMenuPrimitive.SubContent
+		ref={ref}
+		className={cn(
+			"z-50 min-w-[8rem] overflow-hidden rounded-md border border-slate-200 bg-white p-1 shadow-lg dark:bg-slate-950 dark:border-slate-800",
+			className,
+		)}
+		{...props}
+		asChild
+	>
+		<Animated.View entering={FadeIn} exiting={FadeOut}>
+			{props.children}
+		</Animated.View>
+	</DropdownMenuPrimitive.SubContent>
+));
+DropdownMenuSubContent.displayName =
+	DropdownMenuPrimitive.SubContent.displayName;
+
+const DropdownMenuContent = React.forwardRef<
+	React.ElementRef<typeof DropdownMenuPrimitive.Content>,
+	React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content>
+>(({ className, sideOffset = 4, ...props }, ref) => (
+	<DropdownMenuPrimitive.Portal>
+		<DropdownMenuPrimitive.Content
+			ref={ref}
+			sideOffset={sideOffset}
+			className={cn(
+				"z-50 min-w-[8rem] overflow-hidden rounded-md border border-slate-200 bg-white p-1 shadow-md dark:bg-slate-950 dark:border-slate-800",
+				className,
+			)}
+			{...props}
+			asChild
+		>
+			<Animated.View entering={FadeIn} exiting={FadeOut}>
+				{props.children}
+			</Animated.View>
+		</DropdownMenuPrimitive.Content>
+	</DropdownMenuPrimitive.Portal>
+));
+DropdownMenuContent.displayName = DropdownMenuPrimitive.Content.displayName;
+
+const DropdownMenuItem = React.forwardRef<
+	React.ElementRef<typeof DropdownMenuPrimitive.Item>,
+	React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Item> & {
+		inset?: boolean;
+	}
+>(({ className, inset, ...props }, ref) => (
+	<DropdownMenuPrimitive.Item
+		ref={ref}
+		className={cn(
+			"relative flex-row items-center gap-2 rounded-sm px-2 py-1.5 active:bg-slate-100 dark:active:bg-slate-800",
+			inset && "pl-8",
+			className,
+		)}
+		{...props}
+	/>
+));
+DropdownMenuItem.displayName = DropdownMenuPrimitive.Item.displayName;
+
+const DropdownMenuCheckboxItem = React.forwardRef<
+	React.ElementRef<typeof DropdownMenuPrimitive.CheckboxItem>,
+	React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.CheckboxItem>
+>(({ className, children, checked, ...props }, ref) => (
+	<DropdownMenuPrimitive.CheckboxItem
+		ref={ref}
+		className={cn(
+			"relative flex-row items-center rounded-sm py-1.5 pl-8 pr-2 active:bg-slate-100 dark:active:bg-slate-800",
+			className,
+		)}
+		checked={checked}
+		{...props}
+	>
+		<View className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+			<DropdownMenuPrimitive.ItemIndicator>
+				<Check size={14} className="text-slate-900 dark:text-slate-50" />
+			</DropdownMenuPrimitive.ItemIndicator>
+		</View>
+		<DropdownMenuPrimitive.Text className="text-sm text-slate-900 dark:text-slate-50">
+			{children as string}
+		</DropdownMenuPrimitive.Text>
+	</DropdownMenuPrimitive.CheckboxItem>
+));
+DropdownMenuCheckboxItem.displayName =
+	DropdownMenuPrimitive.CheckboxItem.displayName;
+
+const DropdownMenuRadioItem = React.forwardRef<
+	React.ElementRef<typeof DropdownMenuPrimitive.RadioItem>,
+	React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.RadioItem>
+>(({ className, children, ...props }, ref) => (
+	<DropdownMenuPrimitive.RadioItem
+		ref={ref}
+		className={cn(
+			"relative flex-row items-center rounded-sm py-1.5 pl-8 pr-2 active:bg-slate-100 dark:active:bg-slate-800",
+			className,
+		)}
+		{...props}
+	>
+		<View className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+			<DropdownMenuPrimitive.ItemIndicator>
+				<Circle size={8} className="fill-slate-900 text-slate-900 dark:fill-slate-50 dark:text-slate-50" />
+			</DropdownMenuPrimitive.ItemIndicator>
+		</View>
+		<DropdownMenuPrimitive.Text className="text-sm text-slate-900 dark:text-slate-50">
+			{children as string}
+		</DropdownMenuPrimitive.Text>
+	</DropdownMenuPrimitive.RadioItem>
+));
+DropdownMenuRadioItem.displayName = DropdownMenuPrimitive.RadioItem.displayName;
+
+const DropdownMenuLabel = React.forwardRef<
+	React.ElementRef<typeof DropdownMenuPrimitive.Label>,
+	React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Label> & {
+		inset?: boolean;
+	}
+>(({ className, inset, ...props }, ref) => (
+	<DropdownMenuPrimitive.Label
+		ref={ref}
+		className={cn(
+			"px-2 py-1.5 text-sm font-semibold text-slate-900 dark:text-slate-50",
+			inset && "pl-8",
+			className,
+		)}
+		{...props}
+	/>
+));
+DropdownMenuLabel.displayName = DropdownMenuPrimitive.Label.displayName;
+
+const DropdownMenuSeparator = React.forwardRef<
+	React.ElementRef<typeof DropdownMenuPrimitive.Separator>,
+	React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Separator>
+>(({ className, ...props }, ref) => (
+	<DropdownMenuPrimitive.Separator
+		ref={ref}
+		className={cn("-mx-1 my-1 h-px bg-slate-200 dark:bg-slate-800", className)}
+		{...props}
+	/>
+));
+DropdownMenuSeparator.displayName =
+	DropdownMenuPrimitive.Separator.displayName;
+
+export {
+	DropdownMenu,
+	DropdownMenuCheckboxItem,
+	DropdownMenuContent,
+	DropdownMenuGroup,
+	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuPortal,
+	DropdownMenuRadioGroup,
+	DropdownMenuRadioItem,
+	DropdownMenuSeparator,
+	DropdownMenuSub,
+	DropdownMenuSubContent,
+	DropdownMenuSubTrigger,
+	DropdownMenuTrigger,
+};
+`,
+    props: [
+          {
+                "name": "open",
+                "type": "boolean",
+                "default": "undefined",
+                "description": "The controlled open state of the dropdown menu."
+          },
+          {
+                "name": "onOpenChange",
+                "type": "(open: boolean) => void",
+                "default": "undefined",
+                "description": "Callback called when the open state changes."
+          },
+          {
+                "name": "sideOffset",
+                "type": "number",
+                "default": "4",
+                "description": "The distance in pixels from the trigger. Prop of DropdownMenuContent."
+          },
+          {
+                "name": "inset",
+                "type": "boolean",
+                "default": "false",
+                "description": "When true, adds extra left padding. Available on DropdownMenuItem."
+          }
+    ]
+  },
+  "input": {
+    title: "Input",
+    description: "A standard text input field for form entry and user interaction.",
+    slug: "input",
+    badges: ["Universal","Accessible","Customizable"],
+    installation: "npx kibra add input",
+    usage: `import * as React from "react"
+import { View } from "react-native"
+import { Input } from "@/components/ui/input"
+
+export default function Demo() {
+  const [value, setValue] = React.useState('');
+  
+  return (
+    <View className="gap-4">
+      <Input
+        label="Email"
+        placeholder="you@example.com"
+        keyboardType="email-address"
+        value={value}
+        onChangeText={setValue}
+      />
+      <Input
+        label="Password"
+        placeholder="Enter password"
+        secureTextEntry
+        error="Password is too short"
+      />
+    </View>
+  );
+}`,
+    code: `import { cn } from "@/lib/utils";
+import React from "react";
+import { Text, TextInput, View } from "react-native";
+
+interface InputProps extends React.ComponentPropsWithoutRef<typeof TextInput> {
+	label?: string;
+	error?: string;
+}
+
+const Input = React.forwardRef<React.ElementRef<typeof TextInput>, InputProps>(
+	({ className, label, error, ...props }, ref) => {
+		return (
+			<View className="w-full space-y-2">
+				{label && (
+					<Text className="text-sm font-medium text-slate-900 dark:text-slate-50">
+						{label}
+					</Text>
+				)}
+				<TextInput
+					ref={ref}
+					className={cn(
+						"flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus:border-primary dark:border-slate-800 dark:bg-slate-950 dark:text-slate-50 dark:ring-offset-slate-950 dark:placeholder:text-slate-400",
+						error && "border-red-500",
+						className,
+					)}
+					accessibilityLabel={props.accessibilityLabel || label}
+					accessibilityHint={props.accessibilityHint || error}
+					{...props}
+				/>
+				{error && <Text className="text-xs text-red-500">{error}</Text>}
+			</View>
+		);
+	},
+);
+Input.displayName = "Input";
+
+export { Input };
+`,
+    props: [
+          {
+                "name": "label",
+                "type": "string",
+                "default": "undefined",
+                "description": "Label text displayed above the input field."
+          },
+          {
+                "name": "error",
+                "type": "string",
+                "default": "undefined",
+                "description": "Error message displayed below the input with red styling."
+          },
+          {
+                "name": "placeholder",
+                "type": "string",
+                "default": "undefined",
+                "description": "Placeholder text shown when the input is empty."
+          },
+          {
+                "name": "className",
+                "type": "string",
+                "default": "undefined",
+                "description": "Additional NativeWind class names for the TextInput."
+          },
+          {
+                "name": "value",
+                "type": "string",
+                "default": "undefined",
+                "description": "The controlled value of the input."
+          },
+          {
+                "name": "onChangeText",
+                "type": "(text: string) => void",
+                "default": "undefined",
+                "description": "Callback called when the text changes."
+          },
+          {
+                "name": "secureTextEntry",
+                "type": "boolean",
+                "default": "false",
+                "description": "Masks input for password fields."
+          }
+    ]
+  },
+  "label": {
+    title: "Label",
+    description: "An accessible label component associated with input controls.",
+    slug: "label",
+    badges: ["Universal","Accessible","Customizable"],
+    installation: "npx kibra add label",
+    usage: `import * as React from "react"
+import { View } from "react-native"
+import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/input"
+
+export default function Demo() {
+  return (
+    <View className="gap-2">
+      <Label>Email address</Label>
+      <Input placeholder="you@example.com" />
+    </View>
+  )
+}`,
+    code: `import * as LabelPrimitive from "@rn-primitives/label";
+import { cva, type VariantProps } from "class-variance-authority";
+import * as React from "react";
+import { cn } from "@/lib/utils";
+
+const labelVariants = cva(
+	"text-sm font-medium leading-none text-slate-900 dark:text-slate-50 web:peer-disabled:cursor-not-allowed web:peer-disabled:opacity-70",
+);
+
+const Label = React.forwardRef<
+	React.ElementRef<typeof LabelPrimitive.Text>,
+	React.ComponentPropsWithoutRef<typeof LabelPrimitive.Text> &
+		VariantProps<typeof labelVariants>
+>(({ className, ...props }, ref) => (
+	<LabelPrimitive.Root>
+		<LabelPrimitive.Text
+			ref={ref}
+			className={cn(labelVariants(), className)}
+			{...props}
+		/>
+	</LabelPrimitive.Root>
+));
+Label.displayName = LabelPrimitive.Text.displayName;
+
+export { Label };
+`,
+    props: [
+          {
+                "name": "className",
+                "type": "string",
+                "default": "undefined",
+                "description": "Additional NativeWind class names."
+          },
+          {
+                "name": "children",
+                "type": "React.ReactNode",
+                "default": "undefined",
+                "description": "The label text content."
+          }
+    ]
+  },
+  "modal": {
+    title: "Modal",
+    description: "A flexible overlay dialog component for focusing user attention.",
+    slug: "modal",
+    badges: ["Universal","Accessible","Customizable","Animated"],
+    installation: "npx kibra add modal",
+    usage: `import * as React from "react"
+import { View } from "react-native"
+import { Modal } from "@/components/ui/modal"
+import { Button } from "@/components/ui/button"
+
+export default function Demo() {
+  const [visible, setVisible] = React.useState(false);
+  
+  return (
+    <>
+      <Button label="Open Modal" onPress={() => setVisible(true)} />
+      <Modal
+        visible={visible}
+        onClose={() => setVisible(false)}
+        title="Confirm action"
+        description="Are you sure you want to continue? This cannot be undone."
+      >
+        <View className="flex-row gap-3 mt-4">
+          <Button
+            label="Cancel"
+            variant="outline"
+            className="flex-1"
+            onPress={() => setVisible(false)}
+          />
+          <Button label="Confirm" className="flex-1" onPress={() => setVisible(false)} />
+        </View>
+      </Modal>
+    </>
+  );
+}`,
+    code: `import { cn } from "@/lib/utils";
+import React, { useEffect } from "react";
+import {
+	BackHandler,
+	Modal as RNModal,
+	Pressable,
+	Text,
+	View,
+} from "react-native";
+import Animated, {
+	FadeIn,
+	FadeOut,
+	SlideInBottom,
+	SlideOutBottom,
+} from "react-native-reanimated";
+
+interface ModalProps {
+	visible: boolean;
+	onClose: () => void;
+	title?: string;
+	description?: string;
+	children?: React.ReactNode;
+	className?: string;
+}
+
+/**
+ * Elite Modal component for Kibra.
+ * Includes: 
+ * - Smooth Reanimated transitions
+ * - A11y roles and focus management via RN Modal
+ * - Backdrop click-to-close
+ * - Hardware back button handling
+ */
+export function Modal({
+	visible,
+	onClose,
+	title,
+	description,
+	children,
+	className,
+}: ModalProps) {
+	useEffect(() => {
+		const backHandler = BackHandler.addEventListener(
+			"hardwareBackPress",
+			() => {
+				if (visible) {
+					onClose();
+					return true;
+				}
+				return false;
+			},
+		);
+
+		return () => backHandler.remove();
+	}, [visible, onClose]);
+
+	return (
+		<RNModal
+			transparent
+			visible={visible}
+			onRequestClose={onClose}
+			animationType="none" // We use Reanimated for custom transitions
+		>
+			<View className="flex-1 justify-end sm:justify-center">
+				{/* Backdrop */}
+				<Animated.View
+					entering={FadeIn}
+					exiting={FadeOut}
+					className="absolute inset-0 bg-black/50"
+				>
+					<Pressable className="flex-1" onPress={onClose} accessibilityLabel="Close modal" />
+				</Animated.View>
+
+				{/* Modal Content */}
+				<Animated.View
+					entering={SlideInBottom}
+					exiting={SlideOutBottom}
+					className={cn(
+						"bg-white dark:bg-slate-900 rounded-t-3xl sm:rounded-2xl p-6 shadow-xl",
+						className,
+					)}
+					accessibilityRole="alert"
+					aria-modal="true"
+				>
+					<View className="flex-col space-y-2 mb-4">
+						{title && (
+							<Text className="text-xl font-bold text-slate-900 dark:text-slate-50" accessibilityRole="header">
+								{title}
+							</Text>
+						)}
+						{description && (
+							<Text className="text-sm text-slate-500 dark:text-slate-400">
+								{description}
+							</Text>
+						)}
+					</View>
+
+					<View>{children}</View>
+				</Animated.View>
+			</View>
+		</RNModal>
+	);
+}
+`,
+    props: [
+          {
+                "name": "visible",
+                "type": "boolean",
+                "default": "undefined",
+                "description": "Controls whether the modal is shown."
+          },
+          {
+                "name": "onClose",
+                "type": "() => void",
+                "default": "undefined",
+                "description": "Callback called when the user dismisses the modal (backdrop press or hardware back)."
+          },
+          {
+                "name": "title",
+                "type": "string",
+                "default": "undefined",
+                "description": "Bold title text displayed at the top of the modal."
+          },
+          {
+                "name": "description",
+                "type": "string",
+                "default": "undefined",
+                "description": "Subtitle / description text shown below the title."
+          },
+          {
+                "name": "children",
+                "type": "React.ReactNode",
+                "default": "undefined",
+                "description": "Custom content rendered inside the modal body."
+          },
+          {
+                "name": "className",
+                "type": "string",
+                "default": "undefined",
+                "description": "Additional NativeWind class names for the modal sheet container."
+          }
+    ]
+  },
+  "popover": {
+    title: "Popover",
+    description: "Displays rich content in a portal, triggered by an anchor element.",
+    slug: "popover",
+    badges: ["Universal","Accessible","Customizable","Animated"],
+    installation: "npx kibra add popover",
+    usage: `import * as React from "react"
+import { Text } from "react-native"
+import { Popover, PopoverAnchor, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Button } from "@/components/ui/button"
+
+export default function Demo() {
+  return (
+    <Popover>
+      <PopoverTrigger>
+        <Button label="Open Popover" variant="outline" />
+      </PopoverTrigger>
+      <PopoverContent>
+        <Text className="text-sm font-semibold text-slate-900 dark:text-slate-50">
+          Dimensions
+        </Text>
+        <Text className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+          Set the dimensions for the layer.
+        </Text>
+      </PopoverContent>
+    </Popover>
+  )
+}`,
+    code: `import * as PopoverPrimitive from "@rn-primitives/popover";
+import * as React from "react";
+import { StyleSheet, View } from "react-native";
+import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
+import { cn } from "@/lib/utils";
+
+const Popover = PopoverPrimitive.Root;
+
+const PopoverTrigger = PopoverPrimitive.Trigger;
+
+const PopoverAnchor = PopoverPrimitive.Anchor;
+
+const PopoverContent = React.forwardRef<
+	React.ElementRef<typeof PopoverPrimitive.Content>,
+	React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Content>
+>(({ className, align = "center", sideOffset = 4, ...props }, ref) => (
+	<PopoverPrimitive.Portal>
+		<PopoverPrimitive.Content
+			ref={ref}
+			align={align}
+			sideOffset={sideOffset}
+			className={cn(
+				"z-50 w-72 rounded-md border bg-white p-4 shadow-md outline-none dark:bg-slate-950 dark:border-slate-800",
+				className,
+			)}
+			{...props}
+			asChild
+		>
+			<Animated.View entering={FadeIn} exiting={FadeOut}>
+				{props.children}
+			</Animated.View>
+		</PopoverPrimitive.Content>
+	</PopoverPrimitive.Portal>
+));
+PopoverContent.displayName = PopoverPrimitive.Content.displayName;
+
+export { Popover, PopoverAnchor, PopoverContent, PopoverTrigger };
+`,
+    props: [
+          {
+                "name": "open",
+                "type": "boolean",
+                "default": "undefined",
+                "description": "The controlled open state of the popover."
+          },
+          {
+                "name": "onOpenChange",
+                "type": "(open: boolean) => void",
+                "default": "undefined",
+                "description": "Callback called when the open state changes."
+          },
+          {
+                "name": "align",
+                "type": "\"start\" | \"center\" | \"end\"",
+                "default": "\"center\"",
+                "description": "Alignment of the popover content relative to the trigger. Prop of PopoverContent."
+          },
+          {
+                "name": "sideOffset",
+                "type": "number",
+                "default": "4",
+                "description": "Distance in pixels from the trigger. Prop of PopoverContent."
+          },
+          {
+                "name": "className",
+                "type": "string",
+                "default": "undefined",
+                "description": "Additional NativeWind class names for PopoverContent."
+          }
+    ]
+  },
+  "progress": {
+    title: "Progress",
+    description: "Displays an indicator showing the completion progress of a task.",
+    slug: "progress",
+    badges: ["Universal","Accessible","Customizable","Animated"],
+    installation: "npx kibra add progress",
+    usage: `import * as React from "react"
+import { View } from "react-native"
+import { Progress } from "@/components/ui/progress"
+import { Button } from "@/components/ui/button"
+
+export default function Demo() {
+  const [value, setValue] = React.useState(33);
+  
+  return (
+    <View className="gap-4">
+      <Progress value={value} />
+      <Button
+        label="Increment"
+        variant="outline"
+        onPress={() => setValue(v => Math.min(100, v + 10))}
+      />
+    </View>
+  );
+}`,
+    code: `import * as ProgressPrimitive from "@rn-primitives/progress";
+import * as React from "react";
+import Animated, {
+	useAnimatedStyle,
+	withSpring,
+} from "react-native-reanimated";
+import { cn } from "@/lib/utils";
+
+const Progress = React.forwardRef<
+	React.ElementRef<typeof ProgressPrimitive.Root>,
+	React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root>
+>(({ className, value, ...props }, ref) => {
+	return (
+		<ProgressPrimitive.Root
+			ref={ref}
+			className={cn(
+				"relative h-2 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800",
+				className,
+			)}
+			{...props}
+		>
+			<Indicator value={value} />
+		</ProgressPrimitive.Root>
+	);
+});
+Progress.displayName = ProgressPrimitive.Root.displayName;
+
+function Indicator({ value }: { value: number | null | undefined }) {
+	const animatedStyle = useAnimatedStyle(() => {
+		return {
+			width: withSpring(\`\${value ?? 0}%\`, { overshootClamping: true }),
+		};
+	});
+
+	return (
+		<ProgressPrimitive.Indicator asChild>
+			<Animated.View
+				style={animatedStyle}
+				className="h-full bg-primary"
+			/>
+		</ProgressPrimitive.Indicator>
+	);
+}
+
+export { Progress };
+`,
+    props: [
+          {
+                "name": "value",
+                "type": "number | null | undefined",
+                "default": "undefined",
+                "description": "The current progress value between 0 and 100."
+          },
+          {
+                "name": "className",
+                "type": "string",
+                "default": "undefined",
+                "description": "Additional NativeWind class names for the track container."
+          }
+    ]
+  },
+  "radio-group": {
+    title: "Radio Group",
+    description: "A set of checkable buttons where only one button can be checked at a time.",
+    slug: "radio-group",
+    badges: ["Universal","Accessible","Customizable"],
+    installation: "npx kibra add radio-group",
+    usage: `import * as React from "react"
+import { View } from "react-native"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Label } from "@/components/ui/label"
+import { RadioGroup } from "@/components/ui/radiogroup"
+
+export default function Demo() {
+  const [value, setValue] = React.useState('comfortable');
+  
+  return (
+    <RadioGroup value={value} onValueChange={setValue}>
+      <View className="flex-row items-center gap-3">
+        <RadioGroupItem value="default" />
+        <Label>Default</Label>
+      </View>
+      <View className="flex-row items-center gap-3">
+        <RadioGroupItem value="comfortable" />
+        <Label>Comfortable</Label>
+      </View>
+      <View className="flex-row items-center gap-3">
+        <RadioGroupItem value="compact" />
+        <Label>Compact</Label>
+      </View>
+    </RadioGroup>
+  );
+}`,
+    code: `import * as RadioGroupPrimitive from "@rn-primitives/radio-group";
+import { Circle } from "lucide-react-native";
+import * as React from "react";
+import { View } from "react-native";
+import { cn } from "@/lib/utils";
+
+const RadioGroup = React.forwardRef<
+	React.ElementRef<typeof RadioGroupPrimitive.Root>,
+	React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Root>
+>(({ className, ...props }, ref) => {
+	return (
+		<RadioGroupPrimitive.Root
+			className={cn("grid gap-2", className)}
+			{...props}
+			ref={ref}
+		/>
+	);
+});
+RadioGroup.displayName = RadioGroupPrimitive.Root.displayName;
+
+const RadioGroupItem = React.forwardRef<
+	React.ElementRef<typeof RadioGroupPrimitive.Item>,
+	React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Item>
+>(({ className, ...props }, ref) => {
+	return (
+		<RadioGroupPrimitive.Item
+			ref={ref}
+			className={cn(
+				"aspect-square h-5 w-5 rounded-full border border-primary items-center justify-center shadow-sm",
+				className,
+			)}
+			{...props}
+		>
+			<RadioGroupPrimitive.Indicator className="items-center justify-center">
+				<Circle
+					size={10}
+					className="fill-primary text-primary"
+				/>
+			</RadioGroupPrimitive.Indicator>
+		</RadioGroupPrimitive.Item>
+	);
+});
+RadioGroupItem.displayName = RadioGroupPrimitive.Item.displayName;
+
+export { RadioGroup, RadioGroupItem };
+`,
+    props: [
+          {
+                "name": "value",
+                "type": "string",
+                "default": "undefined",
+                "description": "The controlled value of the selected radio item."
+          },
+          {
+                "name": "onValueChange",
+                "type": "(value: string) => void",
+                "default": "undefined",
+                "description": "Callback called when the selected value changes."
+          },
+          {
+                "name": "className",
+                "type": "string",
+                "default": "undefined",
+                "description": "Additional NativeWind class names for the group container."
+          }
+    ]
+  },
+  "separator": {
+    title: "Separator",
+    description: "A visual divider line to separate content sections or list items.",
+    slug: "separator",
+    badges: ["Universal","Accessible","Customizable"],
+    installation: "npx kibra add separator",
+    usage: `import * as React from "react"
+import { View, Text } from "react-native"
+import { Separator } from "@/components/ui/separator"
+
+export default function Demo() {
+  return (
+    <View className="gap-4">
+      <Text className="text-sm font-medium">Kibra UI</Text>
+      <Separator />
+      <View className="flex-row h-5 items-center gap-4">
+        <Text className="text-sm">Blog</Text>
+        <Separator orientation="vertical" />
+        <Text className="text-sm">Docs</Text>
+        <Separator orientation="vertical" />
+        <Text className="text-sm">Source</Text>
+      </View>
+    </View>
+  )
+}`,
+    code: `import * as SeparatorPrimitive from "@rn-primitives/separator";
+import * as React from "react";
+import { cn } from "@/lib/utils";
+
+const Separator = React.forwardRef<
+	React.ElementRef<typeof SeparatorPrimitive.Root>,
+	React.ComponentPropsWithoutRef<typeof SeparatorPrimitive.Root>
+>(
+	(
+		{ className, orientation = "horizontal", decorative = true, ...props },
+		ref,
+	) => (
+		<SeparatorPrimitive.Root
+			ref={ref}
+			decorative={decorative}
+			orientation={orientation}
+			className={cn(
+				"shrink-0 bg-slate-200 dark:bg-slate-800",
+				orientation === "horizontal" ? "h-[1px] w-full" : "h-full w-[1px]",
+				className,
+			)}
+			{...props}
+		/>
+	),
+);
+Separator.displayName = SeparatorPrimitive.Root.displayName;
+
+export { Separator };
+`,
+    props: [
+          {
+                "name": "orientation",
+                "type": "\"horizontal\" | \"vertical\"",
+                "default": "\"horizontal\"",
+                "description": "The axis the separator should extend along."
+          },
+          {
+                "name": "decorative",
+                "type": "boolean",
+                "default": "true",
+                "description": "When true, indicates the element is purely visual and hidden from accessibility tree."
+          },
+          {
+                "name": "className",
+                "type": "string",
+                "default": "undefined",
+                "description": "Additional NativeWind class names."
+          }
+    ]
+  },
+  "skeleton": {
+    title: "Skeleton",
+    description: "Displays a placeholder preview layout while content is loading.",
+    slug: "skeleton",
+    badges: ["Universal","Accessible","Customizable","Animated"],
+    installation: "npx kibra add skeleton",
+    usage: `import * as React from "react"
+import { View } from "react-native"
+import { Skeleton } from "@/components/ui/skeleton"
+
+export default function Demo() {
+  return (
+    <View className="flex-row items-center gap-4">
+      <Skeleton className="h-12 w-12 rounded-full" />
+      <View className="gap-2 flex-1">
+        <Skeleton className="h-4 w-full" />
+        <Skeleton className="h-4 w-4/5" />
+      </View>
+    </View>
+  )
+}`,
+    code: `import React, { useEffect } from "react";
+import Animated, {
+	useAnimatedStyle,
+	useSharedValue,
+	withRepeat,
+	withSequence,
+	withTiming,
+} from "react-native-reanimated";
+import { cn } from "@/lib/utils";
+
+function Skeleton({
+	className,
+	...props
+}: React.ComponentPropsWithoutRef<typeof Animated.View>) {
+	const opacity = useSharedValue(0.5);
+
+	useEffect(() => {
+		opacity.value = withRepeat(
+			withSequence(
+				withTiming(1, { duration: 1000 }),
+				withTiming(0.5, { duration: 1000 }),
+			),
+			-1,
+			true,
+		);
+	}, []);
+
+	const animatedStyle = useAnimatedStyle(() => ({
+		opacity: opacity.value,
+	}));
+
+	return (
+		<Animated.View
+			style={[animatedStyle]}
+			className={cn("rounded-md bg-slate-200 dark:bg-slate-800", className)}
+			{...props}
+		/>
+	);
+}
+
+export { Skeleton };
+`,
+    props: [
+          {
+                "name": "className",
+                "type": "string",
+                "default": "undefined",
+                "description": "NativeWind classes that set the skeleton's size (height and width) and shape."
+          }
+    ]
+  },
+  "slider": {
+    title: "Slider",
+    description: "An input element that allows users to select a value from a range of values.",
+    slug: "slider",
+    badges: ["Universal","Accessible","Customizable"],
+    installation: "npx kibra add slider",
+    usage: `import * as React from "react"
+import { View, Text } from "react-native"
+import { Slider } from "@/components/ui/slider"
+
+export default function Demo() {
+  const [value, setValue] = React.useState([50]);
+  
+  return (
+    <View className="gap-4">
+      <Slider
+        value={value}
+        minimumValue={0}
+        maximumValue={100}
+        step={1}
+        onValueChange={setValue}
+      />
+      <Text className="text-center text-sm text-slate-500">
+        Volume: {value[0]}%
+      </Text>
+    </View>
+  );
+}`,
+    code: `import * as SliderPrimitive from "@rn-primitives/slider";
+import * as React from "react";
+import { cn } from "@/lib/utils";
+
+const Slider = React.forwardRef<
+	React.ElementRef<typeof SliderPrimitive.Root>,
+	React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root>
+>(({ className, ...props }, ref) => {
+	const value = props.value ?? [0];
+
+	return (
+		<SliderPrimitive.Root
+			ref={ref}
+			className={cn(
+				"relative flex-row w-full touch-none select-none items-center",
+				className,
+			)}
+			{...props}
+		>
+			<SliderPrimitive.Track className="relative h-1.5 w-full grow overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
+				<SliderPrimitive.Range className="absolute h-full bg-primary" />
+			</SliderPrimitive.Track>
+			<SliderPrimitive.Thumb className="block h-5 w-5 rounded-full border border-slate-200 bg-white shadow active:scale-110 dark:border-slate-800 dark:bg-slate-950" />
+		</SliderPrimitive.Root>
+	);
+});
+Slider.displayName = SliderPrimitive.Root.displayName;
+
+export { Slider };
+`,
+    props: [
+          {
+                "name": "value",
+                "type": "number[]",
+                "default": "[0]",
+                "description": "The controlled value of the slider as an array."
+          },
+          {
+                "name": "minimumValue",
+                "type": "number",
+                "default": "0",
+                "description": "The minimum allowed value."
+          },
+          {
+                "name": "maximumValue",
+                "type": "number",
+                "default": "100",
+                "description": "The maximum allowed value."
+          },
+          {
+                "name": "step",
+                "type": "number",
+                "default": "1",
+                "description": "The step increment between values."
+          },
+          {
+                "name": "onValueChange",
+                "type": "(values: number[]) => void",
+                "default": "undefined",
+                "description": "Callback called when the slider value changes."
+          },
+          {
+                "name": "className",
+                "type": "string",
+                "default": "undefined",
+                "description": "Additional NativeWind class names."
+          }
+    ]
+  },
+  "switch": {
+    title: "Switch",
+    description: "A toggle switch control that allows users to turn a setting on or off.",
+    slug: "switch",
+    badges: ["Universal","Accessible","Customizable"],
+    installation: "npx kibra add switch",
+    usage: `import * as React from "react"
+import { View } from "react-native"
+import { Switch } from "@/components/ui/switch"
+import { Label } from "@/components/ui/label"
+
+export default function Demo() {
+  const [enabled, setEnabled] = React.useState(false);
+  
+  return (
+    <View className="flex-row items-center justify-between">
+      <Label>Airplane Mode</Label>
+      <Switch
+        checked={enabled}
+        onCheckedChange={setEnabled}
+      />
+    </View>
+  );
+}`,
+    code: `import * as SwitchPrimitives from "@rn-primitives/switch";
+import * as React from "react";
+import { cn } from "@/lib/utils";
+
+const Switch = React.forwardRef<
+	React.ElementRef<typeof SwitchPrimitives.Root>,
+	React.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root>
+>(({ className, ...props }, ref) => (
+	<SwitchPrimitives.Root
+		className={cn(
+			"peer h-6 w-11 shrink-0 cursor-pointer flex-row items-center rounded-full border-2 border-transparent",
+			props.checked ? "bg-primary" : "bg-slate-200 dark:bg-slate-800",
+			className,
+		)}
+		{...props}
+		ref={ref}
+	>
+		<SwitchPrimitives.Thumb
+			className={cn(
+				"pointer-events-none block h-5 w-5 rounded-full bg-white shadow-md transition-transform",
+				props.checked ? "translate-x-5" : "translate-x-0",
+			)}
+		/>
+	</SwitchPrimitives.Root>
+));
+Switch.displayName = SwitchPrimitives.Root.displayName;
+
+export { Switch };
+`,
+    props: [
+          {
+                "name": "checked",
+                "type": "boolean",
+                "default": "undefined",
+                "description": "The controlled checked (on) state of the switch."
+          },
+          {
+                "name": "onCheckedChange",
+                "type": "(checked: boolean) => void",
+                "default": "undefined",
+                "description": "Callback called when the checked state changes."
+          },
+          {
+                "name": "disabled",
+                "type": "boolean",
+                "default": "false",
+                "description": "Disables the switch when true."
+          },
+          {
+                "name": "className",
+                "type": "string",
+                "default": "undefined",
+                "description": "Additional NativeWind class names."
+          }
+    ]
+  },
+  "tabs": {
+    title: "Tabs",
+    description: "A set of tabbed content sections where only one tab is visible at a time.",
+    slug: "tabs",
+    badges: ["Universal","Accessible","Customizable"],
+    installation: "npx kibra add tabs",
+    usage: `import * as React from "react"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Input } from "@/components/ui/input"
+
+export default function Demo() {
+  return (
+    <Tabs defaultValue="account">
+      <TabsList>
+        <TabsTrigger value="account">Account</TabsTrigger>
+        <TabsTrigger value="password">Password</TabsTrigger>
+      </TabsList>
+      <TabsContent value="account">
+        <Input label="Name" placeholder="Pedro Duarte" />
+      </TabsContent>
+      <TabsContent value="password">
+        <Input label="Current password" secureTextEntry />
+      </TabsContent>
+    </Tabs>
+  )
+}`,
+    code: `import * as TabsPrimitive from "@rn-primitives/tabs";
+import * as React from "react";
+import { Text, View } from "react-native";
+import { cn } from "@/lib/utils";
+
+const Tabs = React.forwardRef<
+	React.ElementRef<typeof TabsPrimitive.Root>,
+	Omit<React.ComponentPropsWithoutRef<typeof TabsPrimitive.Root>, "value" | "onValueChange"> & {
+		defaultValue?: string;
+		value?: string;
+		onValueChange?: (value: string) => void;
+	}
+>(({ defaultValue, value: controlledValue, onValueChange: controlledOnValueChange, ...props }, ref) => {
+	const [internalValue, setInternalValue] = React.useState(defaultValue || "");
+	const value = controlledValue !== undefined ? controlledValue : internalValue;
+	const onValueChange = (val: string) => {
+		setInternalValue(val);
+		controlledOnValueChange?.(val);
+	};
+
+	return (
+		<TabsPrimitive.Root
+			ref={ref}
+			value={value}
+			onValueChange={onValueChange}
+			{...props}
+		/>
+	);
+});
+Tabs.displayName = "Tabs";
+
+const TabsList = React.forwardRef<
+	React.ElementRef<typeof TabsPrimitive.List>,
+	React.ComponentPropsWithoutRef<typeof TabsPrimitive.List>
+>(({ className, ...props }, ref) => (
+	<TabsPrimitive.List
+		ref={ref}
+		className={cn(
+			"flex-row h-11 items-center justify-center rounded-lg bg-slate-100 p-1 dark:bg-slate-800",
+			className,
+		)}
+		{...props}
+	/>
+));
+TabsList.displayName = TabsPrimitive.List.displayName;
+
+const TabsTrigger = React.forwardRef<
+	React.ElementRef<typeof TabsPrimitive.Trigger>,
+	React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>
+>(({ className, children, ...props }, ref) => {
+	const { value } = TabsPrimitive.useRootContext() as any;
+	const isActive = value === props.value;
+
+	return (
+		<TabsPrimitive.Trigger
+			ref={ref}
+			className={cn(
+				"flex-1 flex-row items-center justify-center rounded-md px-3 py-1.5",
+				isActive
+					? "bg-white shadow-sm dark:bg-slate-950"
+					: "bg-transparent",
+				className,
+			)}
+			{...props}
+		>
+			{typeof children === 'string' ? (
+				<Text
+					className={cn(
+						"text-sm font-medium",
+						isActive
+							? "text-slate-900 dark:text-slate-50"
+							: "text-slate-500 dark:text-slate-400",
+					)}
+				>
+					{children}
+				</Text>
+			) : (
+				children as React.ReactNode
+			)}
+		</TabsPrimitive.Trigger>
+	);
+});
+TabsTrigger.displayName = TabsPrimitive.Trigger.displayName;
+
+const TabsContent = React.forwardRef<
+	React.ElementRef<typeof TabsPrimitive.Content>,
+	React.ComponentPropsWithoutRef<typeof TabsPrimitive.Content>
+>(({ className, ...props }, ref) => (
+	<TabsPrimitive.Content
+		ref={ref}
+		className={cn("mt-2", className)}
+		{...props}
+	/>
+));
+TabsContent.displayName = TabsPrimitive.Content.displayName;
+
+export { Tabs, TabsContent, TabsList, TabsTrigger };
+`,
+    props: [
+          {
+                "name": "defaultValue",
+                "type": "string",
+                "default": "undefined",
+                "description": "The value of the tab that is selected by default (uncontrolled)."
+          },
+          {
+                "name": "value",
+                "type": "string",
+                "default": "undefined",
+                "description": "The controlled value of the selected tab."
+          },
+          {
+                "name": "onValueChange",
+                "type": "(value: string) => void",
+                "default": "undefined",
+                "description": "Callback called when the selected tab changes."
+          },
+          {
+                "name": "className",
+                "type": "string",
+                "default": "undefined",
+                "description": "Additional NativeWind class names for the root."
+          }
+    ]
+  },
+  "textarea": {
+    title: "Textarea",
+    description: "A multi-line text input field for longer form entries.",
+    slug: "textarea",
+    badges: ["Universal","Accessible","Customizable"],
+    installation: "npx kibra add textarea",
+    usage: `import * as React from "react"
+import { Text } from "react-native"
+import { Textarea } from "@/components/ui/textarea"
+
+export default function Demo() {
+  return (
+    <Textarea
+      placeholder="Type your message here."
+      numberOfLines={4}
+    />
+  )
+}`,
+    code: `import * as React from "react";
+import { TextInput } from "react-native";
+import { cn } from "@/lib/utils";
+
+export interface TextareaProps
+	extends React.ComponentPropsWithoutRef<typeof TextInput> {}
+
+const Textarea = React.forwardRef<
+	React.ElementRef<typeof TextInput>,
+	TextareaProps
+>(({ className, ...props }, ref) => {
+	return (
+		<TextInput
+			ref={ref}
+			multiline
+			numberOfLines={4}
+			textAlignVertical="top"
+			className={cn(
+				"flex min-h-[80px] w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-500 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-50 dark:placeholder:text-slate-400",
+				className,
+			)}
+			{...props}
+		/>
+	);
+});
+Textarea.displayName = "Textarea";
+
+export { Textarea };
+`,
+    props: [
+          {
+                "name": "placeholder",
+                "type": "string",
+                "default": "undefined",
+                "description": "Placeholder text shown when the textarea is empty."
+          },
+          {
+                "name": "numberOfLines",
+                "type": "number",
+                "default": "4",
+                "description": "Number of lines to display."
+          },
+          {
+                "name": "className",
+                "type": "string",
+                "default": "undefined",
+                "description": "Additional NativeWind class names."
+          },
+          {
+                "name": "value",
+                "type": "string",
+                "default": "undefined",
+                "description": "The controlled text value."
+          },
+          {
+                "name": "onChangeText",
+                "type": "(text: string) => void",
+                "default": "undefined",
+                "description": "Callback called when the text changes."
+          }
+    ]
+  },
+  "toggle": {
+    title: "Toggle",
+    description: "A two-state button that can be toggled on or off.",
+    slug: "toggle",
+    badges: ["Universal","Accessible","Customizable"],
+    installation: "npx kibra add toggle",
+    usage: `import * as React from "react"
+import { Toggle } from "@/components/ui/toggle"
+import { Bold } from "lucide-react-native"
+
+export default function Demo() {
+  const [bold, setBold] = React.useState(false);
+  
+  return (
+    <Toggle
+      variant="outline"
+      pressed={bold}
+      onPressedChange={setBold}
+    >
+      <Bold size={16} className="text-slate-900 dark:text-slate-50" />
+    </Toggle>
+  );
+}`,
+    code: `import * as TogglePrimitive from "@rn-primitives/toggle";
+import { cva, type VariantProps } from "class-variance-authority";
+import * as React from "react";
+import { cn } from "@/lib/utils";
+
+const toggleVariants = cva(
+	"flex-row items-center justify-center rounded-md text-sm font-medium active:opacity-80 pb-0.5",
+	{
+		variants: {
+			variant: {
+				default: "bg-transparent",
+				outline:
+					"border border-slate-200 bg-transparent shadow-sm dark:border-slate-800",
+			},
+			size: {
+				default: "h-10 px-3",
+				sm: "h-9 px-2.5",
+				lg: "h-11 px-5",
+			},
+		},
+		defaultVariants: {
+			variant: "default",
+			size: "default",
+		},
+	},
+);
+
+const Toggle = React.forwardRef<
+	React.ElementRef<typeof TogglePrimitive.Root>,
+	React.ComponentPropsWithoutRef<typeof TogglePrimitive.Root> &
+		VariantProps<typeof toggleVariants>
+>(({ className, variant, size, ...props }, ref) => {
+	const isActive = props.pressed;
+
+	return (
+		<TogglePrimitive.Root
+			ref={ref}
+			className={cn(
+				toggleVariants({ variant, size, className }),
+				isActive
+					? "bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-50"
+					: "text-slate-500 dark:text-slate-400",
+			)}
+			{...props}
+		/>
+	);
+});
+
+Toggle.displayName = TogglePrimitive.Root.displayName;
+
+export { Toggle, toggleVariants };
+`,
+    props: [
+          {
+                "name": "variant",
+                "type": "\"default\" | \"outline\"",
+                "default": "\"default\"",
+                "description": "The visual style of the toggle."
+          },
+          {
+                "name": "size",
+                "type": "\"default\" | \"sm\" | \"lg\"",
+                "default": "\"default\"",
+                "description": "The size of the toggle."
+          },
+          {
+                "name": "pressed",
+                "type": "boolean",
+                "default": "undefined",
+                "description": "The controlled pressed state of the toggle."
+          },
+          {
+                "name": "onPressedChange",
+                "type": "(pressed: boolean) => void",
+                "default": "undefined",
+                "description": "Callback called when the pressed state changes."
+          },
+          {
+                "name": "className",
+                "type": "string",
+                "default": "undefined",
+                "description": "Additional NativeWind class names."
+          }
+    ]
+  },
+  "tooltip": {
+    title: "Tooltip",
+    description: "A brief informative message that appears when hovering or pressing an element.",
+    slug: "tooltip",
+    badges: ["Universal","Accessible","Customizable","Animated"],
+    installation: "npx kibra add tooltip",
+    usage: `import * as React from "react"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { Button } from "@/components/ui/button"
+
+export default function Demo() {
+  return (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger>
+          <Button label="Hover me" variant="outline" />
+        </TooltipTrigger>
+        <TooltipContent>
+          Add to library
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  )
+}`,
+    code: `import * as TooltipPrimitive from "@rn-primitives/tooltip";
+import * as React from "react";
+import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
+import { cn } from "@/lib/utils";
+
+const TooltipProvider = TooltipPrimitive.Provider;
+
+const Tooltip = TooltipPrimitive.Root;
+
+const TooltipTrigger = TooltipPrimitive.Trigger;
+
+const TooltipContent = React.forwardRef<
+	React.ElementRef<typeof TooltipPrimitive.Content>,
+	React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Content>
+>(({ className, sideOffset = 4, ...props }, ref) => (
+	<TooltipPrimitive.Portal>
+		<TooltipPrimitive.Content
+			ref={ref}
+			sideOffset={sideOffset}
+			className={cn(
+				"z-50 overflow-hidden rounded-md bg-slate-900 px-3 py-1.5 shadow-md dark:bg-slate-50",
+				className,
+			)}
+			{...props}
+			asChild
+		>
+			<Animated.View entering={FadeIn} exiting={FadeOut}>
+				<TooltipPrimitive.Text
+					className={cn(
+						"text-xs font-medium text-slate-50 dark:text-slate-900",
+					)}
+				>
+					{props.children as string}
+				</TooltipPrimitive.Text>
+			</Animated.View>
+		</TooltipPrimitive.Content>
+	</TooltipPrimitive.Portal>
+));
+TooltipContent.displayName = TooltipPrimitive.Content.displayName;
+
+export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger };
+`,
+    props: [
+          {
+                "name": "sideOffset",
+                "type": "number",
+                "default": "4",
+                "description": "Distance in pixels between the trigger and the tooltip content. Prop of TooltipContent."
+          },
+          {
+                "name": "className",
+                "type": "string",
+                "default": "undefined",
+                "description": "Additional NativeWind class names for TooltipContent."
+          },
+          {
+                "name": "delayDuration",
+                "type": "number",
+                "default": "700",
+                "description": "Duration in ms from when the mouse enters the trigger until the tooltip opens."
+          }
+    ]
+  },
+};

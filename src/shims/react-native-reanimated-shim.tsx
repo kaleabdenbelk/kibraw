@@ -23,6 +23,18 @@ export const FadeIn = 'FadeIn';
 export const FadeOut = 'FadeOut';
 export const LinearTransition = 'LinearTransition';
 
+export function useSharedValue(initialValue: any) {
+  return { value: initialValue };
+}
+
+export function withRepeat(animation: any, numberOfReps?: number, reverse?: boolean) {
+  return animation;
+}
+
+export function withSequence(...animations: any[]) {
+  return animations[0];
+}
+
 export function useAnimatedStyle(callback: () => any) {
   const styles = callback() || {};
   // Handle transform string conversion if it's in React Native array form
@@ -38,7 +50,7 @@ export function useAnimatedStyle(callback: () => any) {
   return styles;
 }
 
-export function withTiming(value: any) {
+export function withTiming(value: any, config?: any) {
   return value;
 }
 
