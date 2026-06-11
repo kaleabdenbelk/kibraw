@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import type { GuideDoc } from "@/data/docs"
 import { getNextDocSlug } from "@/lib/navigation"
 import { useCopy } from "@/lib/use-copy"
-import { renderMarkdownBlock } from "./MarkdownRenderer"
+import { MarkdownRenderer } from "./MarkdownRenderer"
 
 interface GuideArticleProps {
   guide: GuideDoc
@@ -25,11 +25,11 @@ export function GuideArticle({ guide }: GuideArticleProps) {
         </p>
       </div>
 
-      <div className="prose-kibra max-w-none">
-        {guide.content.split("\n\n").map((block, idx) =>
-          renderMarkdownBlock(block, idx, copiedText, handleCopy)
-        )}
-      </div>
+      <MarkdownRenderer 
+        content={guide.content} 
+        copiedText={copiedText} 
+        onCopy={handleCopy} 
+      />
 
       <div className="border-t border-border mt-16 pt-8 flex items-center justify-between">
         <div />
