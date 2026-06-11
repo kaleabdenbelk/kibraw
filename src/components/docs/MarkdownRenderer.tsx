@@ -44,6 +44,8 @@ export function MarkdownRenderer({ content, copiedText, onCopy }: MarkdownRender
           
           // Inline Elements
           strong: ({ children }) => <strong className="font-bold text-foreground">{children}</strong>,
+          // Remove the default pre wrapper so our custom CodeBlock can handle its own container
+          pre: ({ children }: any) => <>{children}</>,
           code: ({ node, inline, className, children, ...props }: any) => {
             const match = /language-(\w+)/.exec(className || "");
             if (!inline && match) {

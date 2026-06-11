@@ -4,6 +4,7 @@ import { InlineCommand } from "@/components/code-block";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { GithubIcon } from "@/components/site/GithubIcon";
+import { COMPONENT_DOCS } from "@/data/docs";
 
 export function LandingPage() {
   return (
@@ -37,7 +38,7 @@ export function LandingPage() {
                 Get started <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
-                to="/docs/components/button"
+                to="/docs/button"
                 className="inline-flex items-center gap-2 rounded-md border border-border bg-background px-4 py-2.5 text-sm font-medium hover:bg-accent transition-colors"
               >
                 Browse components
@@ -92,43 +93,42 @@ export function LandingPage() {
             </p>
           </div>
           <Link
-            to="/docs/components/button"
+            to="/docs/button"
             className="hidden sm:inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground"
           >
-            View all <ArrowRight className="h-4 w-4" />
+            View all 20+ components <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
 
         <div className="grid md:grid-cols-2 gap-5">
           <ComponentCard
-            to="/docs/components/button"
-            name="Button"
-            description="Touchable Pressable with six variants, four sizes, and a loading state."
+            to="/docs/button"
+            name={COMPONENT_DOCS.button.title}
+            description={COMPONENT_DOCS.button.description}
           >
             <div className="flex flex-wrap items-center justify-center gap-3">
               <DemoButton>Default</DemoButton>
               <DemoButton variant="outline">Outline</DemoButton>
               <DemoButton variant="secondary">Secondary</DemoButton>
+              <DemoButton variant="destructive">Destructive</DemoButton>
             </div>
           </ComponentCard>
 
           <ComponentCard
-            to="/docs/components/card"
-            name="Card"
-            description="Composable container with header, content, and footer slots."
+            to="/docs/accordion"
+            name={COMPONENT_DOCS.accordion.title}
+            description={COMPONENT_DOCS.accordion.description}
           >
-            <DemoCard className="w-full max-w-xs">
-              <DemoCardHeader>
-                <DemoCardTitle>Create project</DemoCardTitle>
-                <DemoCardDescription>Deploy in one click.</DemoCardDescription>
-              </DemoCardHeader>
-              <DemoCardFooter>
-                <DemoButton variant="outline" size="sm">
-                  Cancel
-                </DemoButton>
-                <DemoButton size="sm">Deploy</DemoButton>
-              </DemoCardFooter>
-            </DemoCard>
+            <div className="w-full max-w-[240px] space-y-2">
+              <div className="flex items-center justify-between p-3 rounded-lg border border-border bg-card shadow-sm">
+                <span className="text-sm font-medium">Is it accessible?</span>
+                <ArrowRight className="size-3.5 rotate-90 text-muted-foreground" />
+              </div>
+              <div className="flex items-center justify-between p-3 rounded-lg border border-border bg-muted/30">
+                <span className="text-sm font-medium text-muted-foreground">Is it animated?</span>
+                <ArrowRight className="size-3.5 text-muted-foreground" />
+              </div>
+            </div>
           </ComponentCard>
         </div>
       </section>

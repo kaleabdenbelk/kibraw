@@ -24,7 +24,14 @@ export function ComponentShowcase({ component }: ComponentShowcaseProps) {
   return (
     <div className="space-y-8">
       <div>
-        <div className="mb-3 flex flex-wrap gap-2">
+        <h1 className="text-h1 tracking-tight text-slate-900 dark:text-slate-50">
+          {component.title}
+        </h1>
+        <p className="text-body-lg mt-2.5 leading-relaxed font-light text-muted-foreground">
+          {component.description}
+        </p>
+      </div>
+        <div className="mb-3 flex flex-wrap gap-2 mb-10">
           {component.badges?.map((badge) => (
             <span
               key={badge}
@@ -38,13 +45,6 @@ export function ComponentShowcase({ component }: ComponentShowcaseProps) {
             React Native Compatible
           </span>
         </div>
-        <h1 className="text-h1 tracking-tight text-slate-900 dark:text-slate-50">
-          {component.title}
-        </h1>
-        <p className="text-body-lg mt-2.5 leading-relaxed font-light text-muted-foreground">
-          {component.description}
-        </p>
-      </div>
 
       <div className="space-y-5">
         <div className="inline-flex items-center rounded-xl border border-border/80 bg-slate-100/60 p-1 dark:bg-slate-900/40">
