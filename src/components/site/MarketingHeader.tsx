@@ -17,21 +17,21 @@ export function MarketingHeader() {
           <Link to="/docs/button" className="hover:text-foreground transition-colors">
             Components
           </Link>
-          <a href={GITHUB_URL} target="_blank" rel="noreferrer" className="hover:text-foreground transition-colors">
-            GitHub
-          </a>
         </nav>
 
         <div className="flex items-center gap-2">
-          <a
+          {/* <a
             href={GITHUB_URL}
             target="_blank"
             rel="noreferrer"
             className="sm:hidden text-muted-foreground hover:text-foreground p-2 rounded-md transition-colors"
             aria-label="GitHub"
-          >
-            <GithubIcon className="size-5" />
-          </a>
+          > */}
+          <Link to={GITHUB_URL}>
+            <GithubIcon className="mr-4 size-5" />
+          </Link>
+          {/* </a> */}
+          
           <ThemeToggle />
         </div>
       </div>
