@@ -51,7 +51,7 @@ export function LandingPage() {
               </a>
             </div>
             <div className="mt-8 max-w-md">
-              <InlineCommand command="npx Kibra@latest add button" />
+              <InlineCommand command="npx create-kibra-app my-app" />
             </div>
           </div>
 

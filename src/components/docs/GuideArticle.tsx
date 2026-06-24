@@ -17,7 +17,7 @@ export function GuideArticle({ guide }: GuideArticleProps) {
   return (
     <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="space-y-4">
-        <h1 className="text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl">
+        <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
           {guide.title}
         </h1>
         <p className="text-xl text-muted-foreground font-light leading-relaxed max-w-2xl">

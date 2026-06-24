@@ -2,6 +2,7 @@ import * as React from "react"
 import { Outlet, useNavigate } from "react-router-dom"
 import { DocsHeader } from "@/components/site/DocsHeader"
 import { DocsSidebar } from "@/components/site/DocsSidebar"
+import { DocsToc } from "@/components/site/DocsToc"
 import { SearchCommand } from "@/components/site/SearchCommand"
 import { useSearchShortcut } from "@/components/site/use-search-shortcut"
 
@@ -23,20 +24,19 @@ export function DocsLayout() {
   }, [navigate])
 
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground antialiased selection:bg-kibra-primary/20">
-      <a
-        href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:bg-background focus:border focus:border-border focus:rounded-md"
-      >
-        Skip to content
-      </a>
+    <div className="min-h-screen flex flex-col bg-background text-foreground antialiased selection:bg-primary/20">
       <DocsHeader
         onMenuToggle={() => setMobileMenuOpen((v) => !v)}
         mobileMenuOpen={mobileMenuOpen}
         onSearchOpen={openSearch}
       />
-      <div className="flex-1 flex max-w-container mx-auto w-full px-6">
-        <DocsSidebar mobileMenuOpen={mobileMenuOpen} onNavigate={() => setMobileMenuOpen(false)} />
+      
+      <div className="mx-auto flex w-full max-w-[100rem]">
+        <DocsSidebar 
+          mobileMenuOpen={mobileMenuOpen} 
+          onNavigate={() => setMobileMenuOpen(false)} 
+        />
+        
         {mobileMenuOpen && (
           <div
             onClick={() => setMobileMenuOpen(false)}
@@ -44,11 +44,18 @@ export function DocsLayout() {
             aria-hidden="true"
           />
         )}
-        <main id="main-content" className="flex-1 min-w-0 md:pl-8 py-8 md:py-10">
-          <Outlet />
+        
+        <main id="main-content" className="min-w-0 flex-1 px-5 py-10 sm:px-10 lg:px-16">
+          <div className="mx-auto max-w-3xl">
+            <Outlet />
+          </div>
         </main>
+
+        <DocsToc />
       </div>
+
       <SearchCommand open={isSearchOpen} onOpenChange={setIsSearchOpen} />
     </div>
   )
 }
+

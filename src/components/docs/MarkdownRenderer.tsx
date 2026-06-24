@@ -21,20 +21,32 @@ export function MarkdownRenderer({ content, copiedText, onCopy }: MarkdownRender
         components={{
           // Headings
           h1: ({ children }) => (
-            <h2 className="mt-12 mb-6 scroll-m-20 border-b border-border pb-3 text-3xl font-extrabold tracking-tight">
+            <h1 className="text-4xl font-bold tracking-tight text-foreground mb-8">
               {children}
-            </h2>
+            </h1>
           ),
-          h2: ({ children }) => (
-            <h3 className="mt-10 mb-4 scroll-m-20 border-b border-border pb-2 text-2xl font-bold tracking-tight first:mt-0">
-              {children}
-            </h3>
-          ),
-          h3: ({ children }) => (
-            <h4 className="mt-8 mb-4 scroll-m-20 text-xl font-semibold tracking-tight">
-              {children}
-            </h4>
-          ),
+          h2: ({ children }) => {
+            const id = children?.toString().toLowerCase().replace(/\s+/g, "-") || "";
+            return (
+              <h2
+                id={id}
+                className="mt-12 mb-6 scroll-mt-20 text-2xl font-bold tracking-tight"
+              >
+                {children}
+              </h2>
+            );
+          },
+          h3: ({ children }) => {
+            const id = children?.toString().toLowerCase().replace(/\s+/g, "-") || "";
+            return (
+              <h3
+                id={id}
+                className="mt-8 mb-4 scroll-mt-20 text-xl font-bold tracking-tight"
+              >
+                {children}
+              </h3>
+            );
+          },
           
           // Paragraphs & Lists
           p: ({ children }) => <p className="leading-relaxed [&&]:my-6 opacity-90 first:mt-0">{children}</p>,

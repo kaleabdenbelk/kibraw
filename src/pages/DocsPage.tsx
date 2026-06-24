@@ -26,7 +26,7 @@ export function DocsPage() {
 
   if (isComponentSlug(slug)) {
     return (
-      <article className="max-w-4xl">
+      <article className="max-w-4xl text-[15px] leading-7 text-foreground/90">
         <React.Suspense
           fallback={
             <div className="animate-pulse space-y-4">
@@ -47,8 +47,9 @@ export function DocsPage() {
   }
 
   return (
-    <article className="max-w-3xl">
+    <article className="max-w-3xl text-[15px] leading-7 text-foreground/90">
       <GuideArticle guide={guide} />
     </article>
   )
 }
+
