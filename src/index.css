@@ -260,4 +260,12 @@
     border-radius: 0.75rem;
     padding: 1.25em 1.5em;
   }
+
+  .bg-mesh {
+    background-image: 
+      radial-gradient(at bottom center, oklch(0.6 0.2 240 / 0.15), transparent 70%),
+      linear-gradient(to right, oklch(1 0 0 / 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, oklch(1 0 0 / 0.05) 1px, transparent 1px);
+    background-size: 100% 100%, 40px 40px, 40px 40px;
+  }
 }

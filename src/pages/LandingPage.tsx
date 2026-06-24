@@ -1,70 +1,59 @@
-import { ArrowRight, Smartphone, Copy, Palette, Zap, Code2 } from "lucide-react";
+import { ArrowRight, Copy, Palette, Zap, Code2, Smartphone } from "lucide-react";
 import { Link } from "react-router-dom";
 import { InlineCommand } from "@/components/code-block";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { GithubIcon } from "@/components/site/GithubIcon";
+import { EditorMockup } from "@/components/site/EditorMockup";
+import { StepsSection } from "@/components/site/StepsSection";
 import { COMPONENT_DOCS } from "@/data/docs";
+import { cn } from "@/lib/utils";
 
 export function LandingPage() {
   return (
-    <>
+    <div className="bg-background text-foreground overflow-hidden">
       {/* Hero */}
-      <section className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 pt-20 pb-24 lg:pt-28 lg:pb-32">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          <div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-border bg-muted/40 px-3 py-1 text-xs font-medium text-muted-foreground">
-              <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-500" />
-              v0.1 — Button & Card available now
-            </div>
-            <h1 className="mt-6 text-5xl sm:text-6xl font-bold tracking-tight leading-[1.05]">
-              Components for{" "}
-              <span className="bg-gradient-to-br from-foreground to-muted-foreground bg-clip-text text-transparent">
-                React Native
-              </span>
-              .
+      <section className="relative mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 pt-20 pb-24 lg:pt-32 lg:pb-40">
+        <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center relative z-10">
+          <div className="animate-in fade-in slide-in-from-left-8 duration-700">
+            <h1 className="text-6xl sm:text-7xl font-bold tracking-tight leading-[0.95]">
+              Premium UI.
               <br />
-              Built with NativeWind.
+              In your <span className="text-muted-foreground/60">mobile app.</span>
             </h1>
-            <p className="mt-6 text-lg text-muted-foreground max-w-xl leading-relaxed">
+            <p className="mt-8 text-lg text-muted-foreground max-w-xl leading-relaxed font-medium">
               Beautifully designed, accessible, open-code components for Expo and React Native.
-              Copy. Paste. Own your UI.
+              Built with NativeWind v4. Copy. Paste. Own your UI.
             </p>
-            <div className="mt-8 flex flex-wrap items-center gap-3">
+            <div className="mt-10 flex flex-wrap items-center gap-6">
               <Link
                 to="/docs/installation"
-                className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+                className="inline-flex h-12 items-center justify-center rounded-full bg-foreground px-8 text-sm font-bold text-background transition-all hover:opacity-90 hover:scale-105 active:scale-95"
               >
-                Get started <ArrowRight className="h-4 w-4" />
+                Get started
               </Link>
               <Link
                 to="/docs/button"
-                className="inline-flex items-center gap-2 rounded-md border border-border bg-background px-4 py-2.5 text-sm font-medium hover:bg-accent transition-colors"
+                className="text-sm font-bold text-foreground/80 hover:text-foreground transition-colors"
               >
                 Browse components
               </Link>
-              <a
-                href="https://github.com/lucide-react/lucide"
-                className="inline-flex items-center gap-2 rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-              >
-                <GithubIcon className="h-4 w-4" /> GitHub
-              </a>
             </div>
-            <div className="mt-8 max-w-md">
+            <div className="mt-12 max-w-md">
               <InlineCommand command="npx create-kibra-app my-app" />
             </div>
           </div>
 
-          {/* Phone frame mockup */}
-          <div className="relative mx-auto">
-            <div className="absolute -inset-10 -z-10 bg-gradient-to-tr from-muted to-transparent rounded-[3rem] blur-3xl opacity-60" />
-            <PhoneFrame />
+          {/* Editor/Terminal mockup */}
+          <div className="relative animate-in fade-in zoom-in-95 duration-1000 delay-200">
+            <EditorMockup />
           </div>
         </div>
+        
+        {/* Bottom glowing mesh effect */}
+        <div className="absolute bottom-0 left-0 right-0 h-96 bg-mesh -z-0 opacity-40 dark:opacity-60" />
       </section>
 
       {/* Feature strip */}
-      <section className="border-y border-border/60 bg-muted/20">
+      <section className="border-y border-border/40 bg-secondary/30">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {[
             { icon: Copy, title: "Copy & paste", text: "No package. Components live in your repo." },
@@ -73,7 +62,7 @@ export function LandingPage() {
             { icon: Code2, title: "Themable", text: "Semantic tokens, light + dark out of the box." },
           ].map(({ icon: Icon, title, text }) => (
             <div key={title}>
-              <div className="inline-flex h-9 w-9 items-center justify-center rounded-md bg-background border border-border">
+              <div className="inline-flex h-9 w-9 items-center justify-center rounded-md bg-background border border-border shadow-sm">
                 <Icon className="h-4 w-4" />
               </div>
               <div className="mt-3 font-semibold">{title}</div>
@@ -83,68 +72,20 @@ export function LandingPage() {
         </div>
       </section>
 
-      {/* Component grid */}
-      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-24">
-        <div className="flex items-end justify-between gap-4 mb-10">
-          <div>
-            <h2 className="text-3xl font-bold tracking-tight">Components</h2>
-            <p className="mt-2 text-muted-foreground">
-              Tap any preview to see source and installation instructions.
-            </p>
-          </div>
-          <Link
-            to="/docs/button"
-            className="hidden sm:inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground"
-          >
-            View all 20+ components <ArrowRight className="h-4 w-4" />
-          </Link>
-        </div>
-
-        <div className="grid md:grid-cols-2 gap-5">
-          <ComponentCard
-            to="/docs/button"
-            name={COMPONENT_DOCS.button.title}
-            description={COMPONENT_DOCS.button.description}
-          >
-            <div className="flex flex-wrap items-center justify-center gap-3">
-              <DemoButton>Default</DemoButton>
-              <DemoButton variant="outline">Outline</DemoButton>
-              <DemoButton variant="secondary">Secondary</DemoButton>
-              <DemoButton variant="destructive">Destructive</DemoButton>
-            </div>
-          </ComponentCard>
-
-          <ComponentCard
-            to="/docs/accordion"
-            name={COMPONENT_DOCS.accordion.title}
-            description={COMPONENT_DOCS.accordion.description}
-          >
-            <div className="w-full max-w-[240px] space-y-2">
-              <div className="flex items-center justify-between p-3 rounded-lg border border-border bg-card shadow-sm">
-                <span className="text-sm font-medium">Is it accessible?</span>
-                <ArrowRight className="size-3.5 rotate-90 text-muted-foreground" />
-              </div>
-              <div className="flex items-center justify-between p-3 rounded-lg border border-border bg-muted/30">
-                <span className="text-sm font-medium text-muted-foreground">Is it animated?</span>
-                <ArrowRight className="size-3.5 text-muted-foreground" />
-              </div>
-            </div>
-          </ComponentCard>
-        </div>
-      </section>
+      <StepsSection />
 
       {/* CTA */}
-      <section className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 pb-24">
-        <div className="rounded-2xl border border-border bg-muted/30 p-10 lg:p-14 text-center">
+      <section className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 pb-24 relative z-10 pt-24">
+        <div className="rounded-2xl border border-border/40 bg-secondary/30 p-10 lg:p-14 text-center backdrop-blur-sm">
           <h2 className="text-3xl font-bold tracking-tight">Build a beautiful mobile app today.</h2>
-          <p className="mt-3 text-muted-foreground max-w-xl mx-auto">
+          <p className="mt-3 text-muted-foreground max-w-xl mx-auto font-medium leading-relaxed">
             Set up NativeWind, drop in your first component, and ship. The whole flow takes about
             10 minutes.
           </p>
           <div className="mt-7">
             <Link
               to="/docs/installation"
-              className="inline-flex items-center gap-2 rounded-md bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+              className="inline-flex h-11 items-center gap-2 rounded-full bg-foreground px-6 text-sm font-bold text-background transition-all hover:opacity-90"
             >
               Install Kibra <ArrowRight className="h-4 w-4" />
             </Link>
@@ -152,18 +93,19 @@ export function LandingPage() {
         </div>
       </section>
 
-      <footer className="border-t border-border/60">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 flex items-center justify-between text-sm text-muted-foreground">
+      <footer className="border-t border-border/40 bg-background">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 flex items-center justify-between text-sm text-muted-foreground font-medium">
           <div className="flex items-center gap-2">
-            <Smartphone className="h-4 w-4" />
-            <span>Kibra</span>
+            <Smartphone className="h-4 w-4 text-foreground" />
+            <span className="text-foreground font-bold tracking-tight">Kibra</span>
           </div>
           <div>Built for React Native + NativeWind.</div>
         </div>
       </footer>
-    </>
+    </div>
   );
 }
+
 
 function ComponentCard({
   to,
